@@ -2,7 +2,7 @@ package com.andriikravchenkoo.carsaleproject.service.impl;
 
 import com.andriikravchenkoo.carsaleproject.exception.ResourceNotFoundException;
 import com.andriikravchenkoo.carsaleproject.model.entity.Vehicle;
-import com.andriikravchenkoo.carsaleproject.repository.VehicleRepository;
+import com.andriikravchenkoo.carsaleproject.dao.VehicleDao;
 import com.andriikravchenkoo.carsaleproject.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,25 +13,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
 
-    private final VehicleRepository vehicleRepository;
+    private final VehicleDao vehicleDao;
 
     @Override
     public List<Vehicle> findAll() {
-        return (List<Vehicle>) vehicleRepository.findAll();
+        return vehicleDao.findAll();
     }
 
     @Override
     public Vehicle findById(Long id) {
-        return vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle with ID = " + id + " not found"));
+        return vehicleDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle with ID = " + id + " not found"));
     }
 
     @Override
     public Vehicle save(Vehicle vehicle) {
-        return vehicleRepository.save(vehicle);
+        return vehicleDao.save(vehicle);
     }
 
     @Override
     public void delete(Vehicle vehicle) {
-        vehicleRepository.delete(vehicle);
+        vehicleDao.delete(vehicle);
     }
 }
