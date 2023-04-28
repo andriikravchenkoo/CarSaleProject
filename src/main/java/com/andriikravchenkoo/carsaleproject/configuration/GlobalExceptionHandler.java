@@ -15,11 +15,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleException(Exception exception) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("statusCode", HttpStatus.INTERNAL_SERVER_ERROR);
         modelAndView.addObject("timestamp", new Date());
         modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.setViewName("error");
         return modelAndView;
     }
 

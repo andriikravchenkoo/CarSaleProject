@@ -41,6 +41,10 @@ public class Vehicle {
 
     private Boolean isUsed;
 
+    private Announcement announcement;
+
+    private Dealership dealership;
+
     public Vehicle(String vin, String brand, String model, BodyType bodyType, Integer year, EngineType engineType, Double engineCapacity, Integer horsepower, Transmission transmission, Integer mileage, Color color, String licensePlate, Boolean isUsed) {
         this.vin = vin;
         this.brand = brand;

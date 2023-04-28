@@ -30,6 +30,10 @@ public class User implements UserDetails {
 
     private Role role;
 
+    private Dealership dealership;
+
+    private List<Announcement> announcements;
+
     public User(String firstname, String lastname, String email, String password, String phoneNumber, Role role) {
         this.firstname = firstname;
         this.lastname = lastname;
