@@ -2,6 +2,7 @@ package com.andriikravchenkoo.carsaleproject.model.entity;
 
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Dealership {
 
     private Long id;

@@ -16,21 +16,21 @@ public class VehicleRowMapper implements RowMapper<Vehicle> {
 
     @Override
     public Vehicle mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Vehicle vehicle = new Vehicle();
-        vehicle.setId(rs.getLong("id"));
-        vehicle.setVin(rs.getString("vin"));
-        vehicle.setBrand(rs.getString("brand"));
-        vehicle.setModel(rs.getString("model"));
-        vehicle.setBodyType(BodyType.valueOf(rs.getString("body_type")));
-        vehicle.setYear(rs.getInt("year"));
-        vehicle.setEngineType(EngineType.valueOf(rs.getString("engine_type")));
-        vehicle.setEngineCapacity(rs.getDouble("engine_capacity"));
-        vehicle.setHorsepower(rs.getInt("horsepower"));
-        vehicle.setTransmission(Transmission.valueOf(rs.getString("transmission")));
-        vehicle.setMileage(rs.getInt("mileage"));
-        vehicle.setColor(Color.valueOf(rs.getString("color")));
-        vehicle.setLicensePlate(rs.getString("license_plate"));
-        vehicle.setIsUsed(rs.getBoolean("is_used"));
-        return vehicle;
+        return Vehicle.builder()
+                .id(rs.getLong("id"))
+                .vin(rs.getString("vin"))
+                .brand(rs.getString("brand"))
+                .model(rs.getString("model"))
+                .bodyType(BodyType.valueOf(rs.getString("body_type")))
+                .year(rs.getInt("year"))
+                .engineType(EngineType.valueOf(rs.getString("engine_type")))
+                .engineCapacity(rs.getDouble("engine_capacity"))
+                .horsepower(rs.getInt("horsepower"))
+                .transmission(Transmission.valueOf(rs.getString("transmission")))
+                .mileage(rs.getInt("mileage"))
+                .color(Color.valueOf(rs.getString("color")))
+                .licensePlate(rs.getString("license_plate"))
+                .isUsed(rs.getBoolean("is_used"))
+                .build();
     }
 }

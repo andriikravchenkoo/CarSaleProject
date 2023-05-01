@@ -22,7 +22,8 @@ CREATE TYPE region AS ENUM (
     'KHMELNYTSKYI',
     'CHERNIVTSI',
     'CHERNIHIV',
-    'CRIMEA');
+    'CRIMEA'
+    );
 
 CREATE TABLE IF NOT EXISTS dealerships
 (
@@ -48,21 +49,24 @@ CREATE TYPE body_type AS ENUM (
     'ROADSTER',
     'MINIVAN',
     'BUS',
-    'TRUCK');
+    'TRUCK'
+    );
 
 CREATE TYPE engine_type AS ENUM (
     'PETROL',
     'DIESEL',
     'GAS',
     'HYBRID',
-    'ELECTRIC');
+    'ELECTRIC'
+    );
 
 CREATE TYPE transmission AS ENUM (
     'MANUAL',
     'AUTOMATIC',
     'TIPTRONIC',
     'ROBOT',
-    'VARIATOR');
+    'VARIATOR'
+    );
 
 CREATE TYPE color AS ENUM (
     'WHITE',
@@ -75,7 +79,8 @@ CREATE TYPE color AS ENUM (
     'ORANGE',
     'VIOLET',
     'RED',
-    'YELLOW');
+    'YELLOW'
+    );
 
 CREATE TABLE IF NOT EXISTS vehicles
 (
@@ -102,7 +107,8 @@ ALTER TABLE vehicles
 
 CREATE TYPE role AS ENUM (
     'SELLER',
-    'CUSTOMER');
+    'CUSTOMER'
+    );
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -154,7 +160,8 @@ ALTER TABLE favorites
 
 CREATE TYPE format_type AS ENUM (
     'PNG',
-    'JPEG');
+    'JPEG'
+    );
 
 CREATE TABLE IF NOT EXISTS images
 (

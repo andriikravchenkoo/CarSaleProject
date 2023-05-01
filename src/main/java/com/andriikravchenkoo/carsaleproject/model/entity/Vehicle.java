@@ -5,12 +5,14 @@ import com.andriikravchenkoo.carsaleproject.model.enums.Color;
 import com.andriikravchenkoo.carsaleproject.model.enums.EngineType;
 import com.andriikravchenkoo.carsaleproject.model.enums.Transmission;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Vehicle {
 
     private Long id;
