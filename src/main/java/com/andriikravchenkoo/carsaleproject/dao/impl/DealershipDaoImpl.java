@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class DealershipDaoImpl implements DealershipDao {
         final String SQL = "INSERT INTO dealerships (name, region, address, phone_number, description) VALUES (:name, :region, :address, :phone_number, :description)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
                 .addValue("name", dealership.getName())
-                .addValue("region", dealership.getRegion())
+                .addValue("region", dealership.getRegion(), Types.OTHER)
                 .addValue("address", dealership.getAddress())
                 .addValue("phone_number", dealership.getPhoneNumber())
                 .addValue("description", dealership.getDescription());

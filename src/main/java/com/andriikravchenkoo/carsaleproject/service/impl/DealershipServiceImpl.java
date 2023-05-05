@@ -1,10 +1,12 @@
 package com.andriikravchenkoo.carsaleproject.service.impl;
 
 import com.andriikravchenkoo.carsaleproject.dao.DealershipDao;
+import com.andriikravchenkoo.carsaleproject.exception.DataAlreadyExistsException;
 import com.andriikravchenkoo.carsaleproject.exception.ResourceNotFoundException;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.service.DealershipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +29,11 @@ public class DealershipServiceImpl implements DealershipService {
 
     @Override
     public Dealership save(Dealership dealership) {
-        return dealershipDao.save(dealership);
+        try {
+            return dealershipDao.save(dealership);
+        } catch (DuplicateKeyException exception) {
+            throw new DataAlreadyExistsException("Phone number already exists");
+        }
     }
 
     @Override

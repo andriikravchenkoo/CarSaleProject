@@ -67,6 +67,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User saveDealership(User user) {
+        final String SQL = "UPDATE users SET dealership_id = :dealership_id WHERE id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("dealership_id", user.getDealership().getId())
+                .addValue("id", user.getId());
+        namedParameterJdbcTemplate.update(SQL, sqlParameterSource);
+        return user;
+    }
+
+    @Override
     public void delete(User user) {
         final String SQL = "DELETE FROM users WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", user.getId());

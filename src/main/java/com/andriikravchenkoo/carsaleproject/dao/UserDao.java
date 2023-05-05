@@ -15,5 +15,7 @@ public interface UserDao {
 
     User save(User user);
 
+    User saveDealership(User user);
+
     void delete(User user);
 }

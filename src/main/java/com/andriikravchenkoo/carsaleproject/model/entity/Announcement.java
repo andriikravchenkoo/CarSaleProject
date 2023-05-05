@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,8 @@ public class Announcement {
     private Boolean isClosed;
 
     private String description;
+
+    private List<Image> images;
 
     private User user;
 

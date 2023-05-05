@@ -26,6 +26,8 @@ public class Dealership {
 
     private String description;
 
+    private List<Image> images;
+
     private List<User> sellers;
 
     private List<Vehicle> vehicles;

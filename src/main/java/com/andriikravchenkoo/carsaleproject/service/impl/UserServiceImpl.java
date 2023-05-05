@@ -1,10 +1,12 @@
 package com.andriikravchenkoo.carsaleproject.service.impl;
 
+import com.andriikravchenkoo.carsaleproject.exception.DataAlreadyExistsException;
 import com.andriikravchenkoo.carsaleproject.exception.ResourceNotFoundException;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.dao.UserDao;
 import com.andriikravchenkoo.carsaleproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +34,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        return userDao.save(user);
+        try {
+            return userDao.save(user);
+        } catch (DuplicateKeyException exception) {
+            throw new DataAlreadyExistsException("Email or phone number already exists");
+        }
+    }
+
+    @Override
+    public User saveDealership(User user) {
+        return userDao.saveDealership(user);
     }
 
     @Override

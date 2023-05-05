@@ -14,5 +14,7 @@ public interface UserService {
 
     User save(User user);
 
+    User saveDealership(User user);
+
     void delete(User user);
 }

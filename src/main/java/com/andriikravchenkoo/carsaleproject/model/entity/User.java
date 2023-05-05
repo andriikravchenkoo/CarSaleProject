@@ -1,5 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
+import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
 import com.andriikravchenkoo.carsaleproject.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,6 +33,8 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     private Role role;
+
+    private Image image;
 
     private Dealership dealership;
 
@@ -73,5 +77,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static User toEntity(RegisterRequestDto registerRequestDto, PasswordEncoder passwordEncoder) {
+        return User.builder()
+                .firstname(registerRequestDto.getFirstname())
+                .lastname(registerRequestDto.getLastname())
+                .email(registerRequestDto.getEmail())
+                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
+                .phoneNumber(registerRequestDto.getPhoneNumber())
+                .role(registerRequestDto.getRole())
+                .build();
     }
 }

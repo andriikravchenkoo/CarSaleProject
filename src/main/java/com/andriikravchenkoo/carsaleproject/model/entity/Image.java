@@ -1,26 +1,39 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
-import com.andriikravchenkoo.carsaleproject.model.enums.FormatType;
+import com.andriikravchenkoo.carsaleproject.util.ImageCompressor;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Image {
 
     private Long id;
 
     private String name;
 
-    private FormatType formatType;
+    private String type;
 
-    private Byte[] data;
+    private byte[] data;
 
-    public Image(String name, FormatType formatType, Byte[] data) {
+    public Image(String name, String type, byte[] data) {
         this.name = name;
-        this.formatType = formatType;
+        this.type = type;
         this.data = data;
+    }
+
+    public static Image toEntity(MultipartFile file) throws IOException {
+        return Image.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .data(ImageCompressor.compress(file.getBytes()))
+                .build();
     }
 }
