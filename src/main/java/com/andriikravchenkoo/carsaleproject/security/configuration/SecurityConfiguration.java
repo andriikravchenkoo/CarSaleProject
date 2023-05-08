@@ -22,6 +22,8 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers("/authentication/**")
                 .permitAll()
+                .antMatchers("/dealership/create", "/announcement/create")
+                .hasAuthority("SELLER")
                 .anyRequest()
                 .authenticated()
                 .and()

@@ -28,13 +28,7 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
     @Override
     @Transactional
     public void createDealership(DealershipDto dealershipDto, List<MultipartFile> files, User user) {
-        Dealership dealership = dealershipService.save(Dealership.builder()
-                .name(dealershipDto.getName())
-                .region(dealershipDto.getRegion())
-                .address(dealershipDto.getAddress())
-                .phoneNumber(dealershipDto.getPhoneNumber())
-                .description(dealershipDto.getDescription())
-                .build());
+        Dealership dealership = dealershipService.save(Dealership.toEntity(dealershipDto));
 
         List<Image> images = imageService.saveAll(files);
 

@@ -81,7 +81,7 @@ public class ImageDaoIml implements ImageDao {
         List<SqlParameterSource> parameterSources = announcement.getImages().stream()
                 .map(image -> new MapSqlParameterSource()
                         .addValue("announcement_id", announcement.getId())
-                        .addValue("image_id", announcement.getImages()))
+                        .addValue("image_id", image.getId()))
                 .collect(Collectors.toList());
         return (long) namedParameterJdbcTemplate.batchUpdate(SQL, parameterSources.toArray(new SqlParameterSource[0])).length;
     }

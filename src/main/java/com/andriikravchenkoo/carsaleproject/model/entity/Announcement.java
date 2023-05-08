@@ -1,5 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
+import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,5 +36,14 @@ public class Announcement {
         this.created = created;
         this.isClosed = isClosed;
         this.description = description;
+    }
+
+    public static Announcement toEntity(VehicleAnnouncementDto vehicleAnnouncementDto) {
+        return Announcement.builder()
+                .price(vehicleAnnouncementDto.getPrice())
+                .created(new Date())
+                .isClosed(false)
+                .description(vehicleAnnouncementDto.getDescription())
+                .build();
     }
 }

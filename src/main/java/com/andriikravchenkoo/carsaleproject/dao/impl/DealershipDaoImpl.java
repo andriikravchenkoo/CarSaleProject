@@ -4,6 +4,8 @@ import com.andriikravchenkoo.carsaleproject.dao.DealershipDao;
 import com.andriikravchenkoo.carsaleproject.dao.mapper.DealershipRowMapper;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class DealershipDaoImpl implements DealershipDao {
 
@@ -33,6 +36,18 @@ public class DealershipDaoImpl implements DealershipDao {
         final String SQL = "SELECT * FROM dealerships WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
         return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new DealershipRowMapper()));
+    }
+
+    @Override
+    public Optional<Dealership> findByUserEmail(String email) {
+        final String SQL = "SELECT d.id, d.name, d.region, d.address, d.phone_number, d.description FROM dealerships d JOIN users u on d.id = u.dealership_id WHERE u.email = :email";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("email", email);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new DealershipRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Dealership by this user email not found");
+        }
+        return Optional.empty();
     }
 
     @Override

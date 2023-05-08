@@ -37,7 +37,7 @@ public class VehicleDaoImpl implements VehicleDao {
 
     @Override
     public Vehicle save(Vehicle vehicle) {
-        final String SQL = "INSERT INTO vehicles (vin, brand, model, body_type, year, engine_type, engine_capacity, horsepower, transmission, mileage, color, license_plate, is_used) VALUES (:vin, :brand, :model, :body_type, :year, :engine_type, :engine_capacity, :horsepower, :transmission, :mileage, :color, :license_plate, :is_used)";
+        final String SQL = "INSERT INTO vehicles (vin, brand, model, body_type, year, engine_type, engine_capacity, horsepower, transmission, mileage, color, license_plate, is_used, dealership_id) VALUES (:vin, :brand, :model, :body_type, :year, :engine_type, :engine_capacity, :horsepower, :transmission, :mileage, :color, :license_plate, :is_used, :dealership_id)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
                 .addValue("vin", vehicle.getVin())
                 .addValue("brand", vehicle.getBrand())
@@ -51,7 +51,8 @@ public class VehicleDaoImpl implements VehicleDao {
                 .addValue("mileage", vehicle.getMileage())
                 .addValue("color", vehicle.getColor(), Types.OTHER)
                 .addValue("license_plate", vehicle.getLicensePlate())
-                .addValue("is_used", vehicle.getIsUsed());
+                .addValue("is_used", vehicle.getIsUsed())
+                .addValue("dealership_id", vehicle.getDealership().getId());
         namedParameterJdbcTemplate.update(SQL, sqlParameterSource, keyHolder);
         long id = (long) keyHolder.getKeys().get("id");
         vehicle.setId(id);

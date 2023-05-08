@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create announcement</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" rel="stylesheet">
+</head>
+<body>
+
+<div th:insert="~{fragments/navbar :: navbar}"></div>
+
+<div class="vstack gap-2 col-md-4 mx-auto mt-5">
+    <form method="post" th:action="@{/announcement/create}" th:object="${vehicleAnnouncementDto}" enctype="multipart/form-data">
+
+        <h1 class="h1 mb-3 fw-normal">Create announcement</h1>
+
+        <div th:fragment="createFragment">
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="vin">VIN</label>
+                <input class="form-control" id="vin" name="vin" th:value="${vehicleAnnouncementDto.vin}"
+                       type="vin">
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="brand">Brand</label>
+                <input class="form-control" id="brand" name="brand" th:value="${vehicleAnnouncementDto.brand}"
+                       type="brand">
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="model">Model</label>
+                <input class="form-control" id="model" name="model" th:value="${vehicleAnnouncementDto.model}"
+                       type="model">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="bodyType">Body type</label>
+                <select class="form-select" id="bodyType" name="bodyType">
+                    <option th:each="bodyType: ${bodyTypes}"
+                            th:selected="${vehicleAnnouncementDto.bodyType == bodyType}"
+                            th:text="${bodyType}"
+                            th:value="${bodyType}">
+                </select>
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="year">Year</label>
+                <input class="form-control" id="year" name="year" th:value="${vehicleAnnouncementDto.year}"
+                       type="number" pattern="\d+">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="engineType">Engine type</label>
+                <select class="form-select" id="engineType" name="engineType">
+                    <option th:each="engineType: ${engineTypes}"
+                            th:selected="${vehicleAnnouncementDto.engineType == engineType}"
+                            th:text="${engineType}"
+                            th:value="${engineType}">
+                </select>
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="engineCapacity">Engine capacity</label>
+                <input class="form-control" id="engineCapacity" name="engineCapacity" th:value="${vehicleAnnouncementDto.engineCapacity}"
+                       type="number" step="0.1">
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="horsepower">Horsepower</label>
+                <input class="form-control" id="horsepower" name="horsepower" th:value="${vehicleAnnouncementDto.horsepower}"
+                       type="number" pattern="\d+">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="transmission">Transmission</label>
+                <select class="form-select" id="transmission" name="transmission">
+                    <option th:each="transmission: ${transmissions}"
+                            th:selected="${vehicleAnnouncementDto.transmission == transmission}"
+                            th:text="${transmission}"
+                            th:value="${transmission}">
+                </select>
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="mileage">Mileage</label>
+                <input class="form-control" id="mileage" name="mileage" th:value="${vehicleAnnouncementDto.mileage}"
+                       type="number" pattern="\d+">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="color">Color</label>
+                <select class="form-select" id="color" name="color">
+                    <option th:each="color: ${colors}"
+                            th:selected="${vehicleAnnouncementDto.color == color}"
+                            th:text="${color}"
+                            th:value="${color}">
+                </select>
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="licensePlate">License plate</label>
+                <input class="form-control" id="licensePlate" name="licensePlate" th:value="${vehicleAnnouncementDto.licensePlate}"
+                       type="licensePlate">
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="isUsed">Is used?</label>
+                <input class="form-check-input" id="isUsed" name="isUsed" type="checkbox" th:checked="${vehicleAnnouncementDto.isUsed}"/>
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="price">Price</label>
+                <input class="form-control" id="price" name="price" th:value="${vehicleAnnouncementDto.price}"
+                       type="number" pattern="\d+">
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" id="description" name="description"
+                          th:text="${vehicleAnnouncementDto.description}"></textarea>
+            </div>
+
+            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
+                <label class="form-label" for="files">Photos</label>
+                <input class="form-control" id="files" name="files" type="file" accept="image/png, image/jpeg" multiple>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-secondary" type="submit">Place a announcement</button>
+        </div>
+
+        <div th:if="${#fields.hasErrors()}">
+            <div class="alert alert-danger mt-4">
+                <ul>
+                    <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger mt-4" role="alert">
+            <li th:text="${errorMessage}"></li>
+        </div>
+
+    </form>
+
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

@@ -10,6 +10,8 @@ public interface DealershipService {
 
     Dealership findById(Long id);
 
+    Dealership findByUserEmail(String email);
+
     Dealership save(Dealership dealership);
 
     void delete(Dealership dealership);

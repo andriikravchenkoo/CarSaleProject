@@ -13,6 +13,8 @@
 <div class="vstack gap-2 col-md-4 mx-auto mt-5">
     <form method="post" th:action="@{/dealership/create}" th:object="${dealershipDto}" enctype="multipart/form-data">
 
+        <h1 class="h1 mb-3 fw-normal">Create dealership</h1>
+
         <div th:fragment="createFragment">
             <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
                 <label class="form-label" for="name">Name</label>
@@ -51,13 +53,12 @@
 
             <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
                 <label class="form-label" for="files">Photos</label>
-                <input class="form-control" id="files" name="files" type="file" accept="image/*" multiple>
+                <input class="form-control" id="files" name="files" type="file" accept="image/png, image/jpeg" multiple>
             </div>
-
         </div>
 
         <div class="text-center">
-            <button class="btn btn-secondary" type="submit">Create</button>
+            <button class="btn btn-secondary" type="submit">Place a dealership</button>
         </div>
 
         <div th:if="${#fields.hasErrors()}">

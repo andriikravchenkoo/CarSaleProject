@@ -36,12 +36,14 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
 
     @Override
     public Announcement save(Announcement announcement) {
-        final String SQL = "INSERT INTO announcements (price, created, is_closed, description) VALUES (:price, :created, :is_closed, :description)";
+        final String SQL = "INSERT INTO announcements (price, created, is_closed, description, user_id, vehicle_id) VALUES (:price, :created, :is_closed, :description, :user_id, :vehicle_id)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
                 .addValue("price", announcement.getPrice())
                 .addValue("created", announcement.getCreated())
                 .addValue("is_closed", announcement.getIsClosed())
-                .addValue("description", announcement.getDescription());
+                .addValue("description", announcement.getDescription())
+                .addValue("user_id", announcement.getUser().getId())
+                .addValue("vehicle_id", announcement.getVehicle().getId());
         namedParameterJdbcTemplate.update(SQL, sqlParameterSource, keyHolder);
         long id = (long) keyHolder.getKeys().get("id");
         announcement.setId(id);

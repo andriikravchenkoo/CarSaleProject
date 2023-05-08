@@ -2,15 +2,16 @@ package com.andriikravchenkoo.carsaleproject.controller.advice;
 
 import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
 import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
+import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.exception.DataAlreadyExistsException;
 import com.andriikravchenkoo.carsaleproject.exception.ImageConvertException;
 import com.andriikravchenkoo.carsaleproject.exception.ImageNotSavedException;
 import com.andriikravchenkoo.carsaleproject.exception.ResourceNotFoundException;
-import com.andriikravchenkoo.carsaleproject.model.enums.Region;
-import com.andriikravchenkoo.carsaleproject.model.enums.Role;
+import com.andriikravchenkoo.carsaleproject.model.enums.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
@@ -29,14 +30,6 @@ public class GlobalExceptionHandler {
         return modelAndView;
     }
 
-    @ExceptionHandler(ImageConvertException.class)
-    public ModelAndView handleImageConvertException(ImageConvertException exception) {
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST);
-        modelAndView.addObject("timestamp", new Date());
-        modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
-        return modelAndView;
-    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ModelAndView handleResourceNotFoundException(ResourceNotFoundException exception) {
@@ -48,36 +41,83 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataAlreadyExistsException.class)
-    public ModelAndView handleDataAlreadyExistsException(DataAlreadyExistsException exception) {
-        if (exception.getMessage().equals("Email or phone number already exists")) {
-            ModelAndView modelAndView = new ModelAndView("authentication/register");
+    public ModelAndView handleDataAlreadyExistsException(DataAlreadyExistsException exception, WebRequest webRequest) {
+        final String requestUrl = webRequest.getDescription(false);
+        ModelAndView modelAndView;
+        if (requestUrl.contains("/authentication/register")) {
+            modelAndView = new ModelAndView("authentication/register");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             modelAndView.addObject("registerRequestDto", new RegisterRequestDto());
             modelAndView.addObject("roles", Role.values());
             return modelAndView;
-        } else {
-            ModelAndView modelAndView = new ModelAndView("dealership/create");
+        } else if (requestUrl.contains("/dealership/create")) {
+            modelAndView = new ModelAndView("dealership/create");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             modelAndView.addObject("dealershipDto", new DealershipDto());
             modelAndView.addObject("regions", Region.values());
+            return modelAndView;
+        } else if (requestUrl.contains("/announcement/create")) {
+            modelAndView = new ModelAndView("announcement/create");
+            modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
+            modelAndView.addObject("vehicleAnnouncementDto", new VehicleAnnouncementDto());
+            modelAndView.addObject("bodyTypes", BodyType.values());
+            modelAndView.addObject("engineTypes", EngineType.values());
+            modelAndView.addObject("transmissions", Transmission.values());
+            modelAndView.addObject("colors", Color.values());
+            return modelAndView;
+        } else {
+            modelAndView = new ModelAndView("error");
+            modelAndView.addObject("statusCode", HttpStatus.NOT_FOUND);
+            modelAndView.addObject("timestamp", new Date());
+            modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             return modelAndView;
         }
     }
 
     @ExceptionHandler(ImageNotSavedException.class)
-    public ModelAndView handleImageNotSavedException(ImageNotSavedException exception) {
-        if (exception.getMessage().equals("Upload one photo")) {
-            ModelAndView modelAndView = new ModelAndView("authentication/register");
+    public ModelAndView handleImageNotSavedException(ImageNotSavedException exception, WebRequest webRequest) {
+        final String requestUrl = getRequestUrl(webRequest);
+        ModelAndView modelAndView;
+        if (requestUrl.contains("/authentication/register")) {
+            modelAndView = new ModelAndView("authentication/register");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             modelAndView.addObject("registerRequestDto", new RegisterRequestDto());
             modelAndView.addObject("roles", Role.values());
             return modelAndView;
-        } else {
-            ModelAndView modelAndView = new ModelAndView("dealership/create");
+        } else if (requestUrl.contains("/dealership/create")) {
+            modelAndView = new ModelAndView("dealership/create");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             modelAndView.addObject("dealershipDto", new DealershipDto());
             modelAndView.addObject("regions", Region.values());
             return modelAndView;
+        } else if (requestUrl.contains("/announcement/create")) {
+            modelAndView = new ModelAndView("announcement/create");
+            modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
+            modelAndView.addObject("vehicleAnnouncementDto", new VehicleAnnouncementDto());
+            modelAndView.addObject("bodyTypes", BodyType.values());
+            modelAndView.addObject("engineTypes", EngineType.values());
+            modelAndView.addObject("transmissions", Transmission.values());
+            modelAndView.addObject("colors", Color.values());
+            return modelAndView;
+        } else {
+            modelAndView = new ModelAndView("error");
+            modelAndView.addObject("statusCode", HttpStatus.NOT_FOUND);
+            modelAndView.addObject("timestamp", new Date());
+            modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
+            return modelAndView;
         }
+    }
+
+    @ExceptionHandler(ImageConvertException.class)
+    public ModelAndView handleImageConvertException(ImageConvertException exception) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST);
+        modelAndView.addObject("timestamp", new Date());
+        modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
+        return modelAndView;
+    }
+
+    private String getRequestUrl(WebRequest webRequest) {
+        return webRequest.getDescription(false);
     }
 }

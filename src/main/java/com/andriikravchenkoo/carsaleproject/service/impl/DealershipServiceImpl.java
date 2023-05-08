@@ -28,6 +28,11 @@ public class DealershipServiceImpl implements DealershipService {
     }
 
     @Override
+    public Dealership findByUserEmail(String email) {
+        return dealershipDao.findByUserEmail(email).orElseThrow(() -> new ResourceNotFoundException("Dealership by user email = " + email + " not found. You are not listed in any of the dealership"));
+    }
+
+    @Override
     public Dealership save(Dealership dealership) {
         try {
             return dealershipDao.save(dealership);
