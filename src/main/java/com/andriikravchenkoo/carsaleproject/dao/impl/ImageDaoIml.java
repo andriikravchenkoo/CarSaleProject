@@ -7,6 +7,8 @@ import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -18,12 +20,44 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class ImageDaoIml implements ImageDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final KeyHolder keyHolder;
+
+    @Override
+    public List<Image> findAllByDealershipId(Long id) {
+        final String SQL = "SELECT i.* FROM images i JOIN dealerships_images di ON i.id = di.image_id JOIN dealerships d ON d.id = di.dealership_id WHERE d.id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new ImageRowMapper());
+    }
+
+    @Override
+    public Optional<Image> findById(Long id) {
+        final String SQL = "SELECT * FROM images WHERE id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new ImageRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Image by this id not found");
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Image> findByUserId(Long id) {
+        final String SQL = "SELECT i.* FROM images i INNER JOIN users_images ui ON ui.image_id = i.id WHERE ui.user_id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new ImageRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Image by this user id not found");
+        }
+        return Optional.empty();
+    }
 
     @Override
     public Image save(Image image) {
@@ -67,29 +101,22 @@ public class ImageDaoIml implements ImageDao {
     @Override
     public Long saveAllDealershipImages(Dealership dealership) {
         final String SQL = "INSERT INTO dealerships_images (dealership_id, image_id) VALUES (:dealership_id, :image_id)";
-        List<SqlParameterSource> parameterSources = dealership.getImages().stream()
+        List<SqlParameterSource> sqlParameterSources = dealership.getImages().stream()
                 .map(image -> new MapSqlParameterSource()
                         .addValue("dealership_id", dealership.getId())
                         .addValue("image_id", image.getId()))
                 .collect(Collectors.toList());
-        return (long) namedParameterJdbcTemplate.batchUpdate(SQL, parameterSources.toArray(new SqlParameterSource[0])).length;
+        return (long) namedParameterJdbcTemplate.batchUpdate(SQL, sqlParameterSources.toArray(new SqlParameterSource[0])).length;
     }
 
     @Override
     public Long saveAllAnnouncementImages(Announcement announcement) {
         final String SQL = "INSERT INTO announcements_images (announcement_id, image_id) VALUES (:announcement_id, :image_id)";
-        List<SqlParameterSource> parameterSources = announcement.getImages().stream()
+        List<SqlParameterSource> sqlParameterSources = announcement.getImages().stream()
                 .map(image -> new MapSqlParameterSource()
                         .addValue("announcement_id", announcement.getId())
                         .addValue("image_id", image.getId()))
                 .collect(Collectors.toList());
-        return (long) namedParameterJdbcTemplate.batchUpdate(SQL, parameterSources.toArray(new SqlParameterSource[0])).length;
-    }
-
-    @Override
-    public Optional<Image> findById(Long id) {
-        final String SQL = "SELECT * FROM images WHERE id = :id";
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new ImageRowMapper()));
+        return (long) namedParameterJdbcTemplate.batchUpdate(SQL, sqlParameterSources.toArray(new SqlParameterSource[0])).length;
     }
 }

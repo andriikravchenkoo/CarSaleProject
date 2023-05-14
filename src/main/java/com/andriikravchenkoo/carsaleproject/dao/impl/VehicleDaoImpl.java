@@ -4,6 +4,8 @@ import com.andriikravchenkoo.carsaleproject.dao.VehicleDao;
 import com.andriikravchenkoo.carsaleproject.dao.mapper.VehicleRowMapper;
 import com.andriikravchenkoo.carsaleproject.model.entity.Vehicle;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -13,8 +15,10 @@ import org.springframework.stereotype.Repository;
 import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class VehicleDaoImpl implements VehicleDao {
 
@@ -29,10 +33,22 @@ public class VehicleDaoImpl implements VehicleDao {
     }
 
     @Override
+    public List<Vehicle> findAllByUserId(Long id) {
+        final String SQL = "SELECT * FROM vehicles v JOIN announcements a ON v.id = a.vehicle_id WHERE a.user_id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new VehicleRowMapper());
+    }
+
+    @Override
     public Optional<Vehicle> findById(Long id) {
         String SQL = "SELECT * FROM vehicles WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new VehicleRowMapper()));
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new VehicleRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Vehicle by this id not found");
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -57,6 +73,17 @@ public class VehicleDaoImpl implements VehicleDao {
         long id = (long) keyHolder.getKeys().get("id");
         vehicle.setId(id);
         return vehicle;
+    }
+
+    @Override
+    public Long updateAllWithNewDealerships(List<Vehicle> vehicles) {
+        final String SQL = "UPDATE vehicles SET dealership_id = :dealership_id WHERE id = :id";
+        List<SqlParameterSource> sqlParameterSources = vehicles.stream()
+                .map(vehicle -> new MapSqlParameterSource()
+                        .addValue("dealership_id", vehicle.getDealership().getId())
+                        .addValue("id", vehicle.getId()))
+                .collect(Collectors.toList());
+        return (long) namedParameterJdbcTemplate.batchUpdate(SQL, sqlParameterSources.toArray(new SqlParameterSource[0])).length;
     }
 
     @Override

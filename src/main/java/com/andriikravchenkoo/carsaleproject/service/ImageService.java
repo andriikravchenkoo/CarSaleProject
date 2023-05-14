@@ -11,6 +11,12 @@ import java.util.List;
 
 public interface ImageService {
 
+    List<Image> findAllByDealershipId(Long id);
+
+    Image findById(Long id) throws IOException;
+
+    Image findByUserId(Long id) throws IOException;
+
     Image save(MultipartFile file) throws IOException;
 
     List<Image> saveAll(List<MultipartFile> files);
@@ -20,6 +26,4 @@ public interface ImageService {
     Long saveAllDealershipImages(Dealership dealership);
 
     Long saveAllAnnouncementImages(Announcement announcement);
-
-    Image findById(Long id) throws IOException;
 }

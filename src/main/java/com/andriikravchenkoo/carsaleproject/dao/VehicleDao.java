@@ -9,9 +9,13 @@ public interface VehicleDao {
 
     List<Vehicle> findAll();
 
+    List<Vehicle> findAllByUserId(Long id);
+
     Optional<Vehicle> findById(Long id);
 
     Vehicle save(Vehicle vehicle);
+
+    Long updateAllWithNewDealerships(List<Vehicle> vehicles);
 
     void delete(Vehicle vehicle);
 }

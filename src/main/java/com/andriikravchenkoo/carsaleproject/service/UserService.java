@@ -12,6 +12,8 @@ public interface UserService {
 
     User findByEmail(String email);
 
+    User findByDealershipId(Long id);
+
     User save(User user);
 
     User saveDealership(User user);

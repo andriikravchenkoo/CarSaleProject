@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByDealershipId(Long id) {
+        return userDao.findByDealershipId(id).orElseThrow(() -> new ResourceNotFoundException("User by dealership id = " + id + " not found"));
+    }
+
+    @Override
     public User save(User user) {
         try {
             return userDao.save(user);

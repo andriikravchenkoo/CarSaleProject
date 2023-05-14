@@ -23,6 +23,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public List<Vehicle> findAllByUserId(Long id) {
+        return vehicleDao.findAllByUserId(id);
+    }
+
+    @Override
     public Vehicle findById(Long id) {
         return vehicleDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle with ID = " + id + " not found"));
     }
@@ -34,6 +39,11 @@ public class VehicleServiceImpl implements VehicleService {
         } catch (DuplicateKeyException exception) {
             throw new DataAlreadyExistsException("Vehicle with this VIN code or license plate already exists");
         }
+    }
+
+    @Override
+    public Long updateAllWithNewDealerships(List<Vehicle> vehicles) {
+        return vehicleDao.updateAllWithNewDealerships(vehicles);
     }
 
     @Override

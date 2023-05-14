@@ -1,7 +1,7 @@
 package com.andriikravchenkoo.carsaleproject.service.impl;
 
 import com.andriikravchenkoo.carsaleproject.dao.ImageDao;
-import com.andriikravchenkoo.carsaleproject.exception.ImageConvertException;
+import com.andriikravchenkoo.carsaleproject.exception.ImageCompressException;
 import com.andriikravchenkoo.carsaleproject.exception.ImageNotSavedException;
 import com.andriikravchenkoo.carsaleproject.exception.ResourceNotFoundException;
 import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
@@ -24,6 +24,39 @@ public class ImageServiceImpl implements ImageService {
     private final ImageDao imageDao;
 
     @Override
+    public List<Image> findAllByDealershipId(Long id) {
+        return imageDao.findAllByDealershipId(id).stream().peek(image -> {
+            try {
+                ImageCompressor.decompress(image.getData());
+            } catch (IOException e) {
+                throw new ImageCompressException("Failed decompress Image = " + image.getName());
+            }
+        }).toList();
+    }
+
+    @Override
+    public Image findById(Long id) throws IOException {
+        Image image = imageDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image with id = " + id + " not found"));
+        return Image.builder()
+                .id(image.getId())
+                .name(image.getName())
+                .type(image.getType())
+                .data(ImageCompressor.decompress(image.getData()))
+                .build();
+    }
+
+    @Override
+    public Image findByUserId(Long id) throws IOException {
+        Image image = imageDao.findByUserId(id).orElseThrow(() -> new ResourceNotFoundException("Image by user id = " + id + " not found"));
+        return Image.builder()
+                .id(image.getId())
+                .name(image.getName())
+                .type(image.getType())
+                .data(ImageCompressor.decompress(image.getData()))
+                .build();
+    }
+
+    @Override
     public Image save(MultipartFile file) throws IOException {
         if (file.getSize() == 0) {
             throw new ImageNotSavedException("Upload one photo");
@@ -42,7 +75,7 @@ public class ImageServiceImpl implements ImageService {
             try {
                 return Image.toEntity(file);
             } catch (IOException e) {
-                throw new ImageConvertException("Failed convert Image = " + file.getOriginalFilename());
+                throw new ImageCompressException("Failed compress Image = " + file.getOriginalFilename());
             }
         }).toList();
 
@@ -62,16 +95,5 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Long saveAllAnnouncementImages(Announcement announcement) {
         return imageDao.saveAllAnnouncementImages(announcement);
-    }
-
-    @Override
-    public Image findById(Long id) throws IOException {
-        Image image = imageDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image with id = " + id + " not found"));
-        return Image.builder()
-                .id(image.getId())
-                .name(image.getName())
-                .type(image.getType())
-                .data(ImageCompressor.decompress(image.getData()))
-                .build();
     }
 }

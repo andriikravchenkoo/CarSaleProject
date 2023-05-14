@@ -4,7 +4,7 @@ import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
 import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.exception.DataAlreadyExistsException;
-import com.andriikravchenkoo.carsaleproject.exception.ImageConvertException;
+import com.andriikravchenkoo.carsaleproject.exception.ImageCompressException;
 import com.andriikravchenkoo.carsaleproject.exception.ImageNotSavedException;
 import com.andriikravchenkoo.carsaleproject.exception.ResourceNotFoundException;
 import com.andriikravchenkoo.carsaleproject.model.enums.*;
@@ -108,8 +108,8 @@ public class GlobalExceptionHandler {
         }
     }
 
-    @ExceptionHandler(ImageConvertException.class)
-    public ModelAndView handleImageConvertException(ImageConvertException exception) {
+    @ExceptionHandler(ImageCompressException.class)
+    public ModelAndView handleImageCompressException(ImageCompressException exception) {
         ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST);
         modelAndView.addObject("timestamp", new Date());

@@ -1,7 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.controller;
 
 import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
-
 import com.andriikravchenkoo.carsaleproject.model.enums.Role;
 import com.andriikravchenkoo.carsaleproject.security.facade.RegistrationServiceFacade;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public String getExecuteRegisterPage(@Valid RegisterRequestDto registerRequestDto, BindingResult bindingResult, MultipartFile file, Model model) throws IOException {
+    public String postRegisterPage(@Valid RegisterRequestDto registerRequestDto, BindingResult bindingResult, MultipartFile file, Model model) throws IOException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", Role.values());
             return "authentication/register";

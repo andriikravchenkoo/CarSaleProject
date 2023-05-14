@@ -4,6 +4,8 @@ import com.andriikravchenkoo.carsaleproject.dao.AnnouncementDao;
 import com.andriikravchenkoo.carsaleproject.dao.mapper.AnnouncementRowMapper;
 import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class AnnouncementDaoImpl implements AnnouncementDao {
 
@@ -31,7 +34,12 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     public Optional<Announcement> findById(Long id) {
         final String SQL = "SELECT * FROM announcements WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new AnnouncementRowMapper()));
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new AnnouncementRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Announcement by this id not found");
+        }
+        return Optional.empty();
     }
 
     @Override

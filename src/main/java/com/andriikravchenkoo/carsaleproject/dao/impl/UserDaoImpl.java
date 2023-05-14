@@ -35,7 +35,12 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findById(Long id) {
         final String SQL = "SELECT * FROM users WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new UserRowMapper()));
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new UserRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("User by this id not found");
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -46,6 +51,18 @@ public class UserDaoImpl implements UserDao {
             return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new UserRowMapper()));
         } catch (EmptyResultDataAccessException exception) {
             log.error("User with this email not found");
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByDealershipId(Long id) {
+        final String SQL = "SELECT * FROM users WHERE dealership_id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new UserRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("User with this dealership id not found");
         }
         return Optional.empty();
     }

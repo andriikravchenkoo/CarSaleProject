@@ -10,6 +10,12 @@ import java.util.Optional;
 
 public interface ImageDao {
 
+    List<Image> findAllByDealershipId(Long id);
+
+    Optional<Image> findById(Long id);
+
+    Optional<Image> findByUserId(Long id);
+
     Image save(Image image);
 
     List<Image> saveAll(List<Image> images);
@@ -19,6 +25,4 @@ public interface ImageDao {
     Long saveAllDealershipImages(Dealership dealership);
 
     Long saveAllAnnouncementImages(Announcement announcement);
-
-    Optional<Image> findById(Long id);
 }

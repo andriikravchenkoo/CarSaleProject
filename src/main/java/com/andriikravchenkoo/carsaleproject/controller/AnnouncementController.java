@@ -35,7 +35,7 @@ public class AnnouncementController {
     }
 
     @PostMapping("/create")
-    public String getExecuteAnnouncementPage(@Valid VehicleAnnouncementDto vehicleAnnouncementDto, BindingResult bindingResult, List<MultipartFile> files, @AuthenticationPrincipal User user, Model model) {
+    public String postAnnouncementPage(@Valid VehicleAnnouncementDto vehicleAnnouncementDto, BindingResult bindingResult, List<MultipartFile> files, @AuthenticationPrincipal User user, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bodyTypes", BodyType.values());
             model.addAttribute("engineTypes", EngineType.values());

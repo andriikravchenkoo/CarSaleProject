@@ -5,9 +5,11 @@ import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
+import com.andriikravchenkoo.carsaleproject.model.entity.Vehicle;
 import com.andriikravchenkoo.carsaleproject.service.DealershipService;
 import com.andriikravchenkoo.carsaleproject.service.ImageService;
 import com.andriikravchenkoo.carsaleproject.service.UserService;
+import com.andriikravchenkoo.carsaleproject.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
     private final UserService userService;
 
+    private final VehicleService vehicleService;
+
     @Override
     @Transactional
     public void createDealership(DealershipDto dealershipDto, List<MultipartFile> files, User user) {
@@ -35,6 +39,33 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
         dealership.setImages(images);
 
         imageService.saveAllDealershipImages(dealership);
+
+        user.setDealership(dealership);
+
+        userService.saveDealership(user);
+    }
+
+    @Override
+    public Dealership getDealershipWithImages(Long id) {
+        List<Image> images = imageService.findAllByDealershipId(id);
+
+        Dealership dealership = dealershipService.findById(id);
+
+        dealership.setImages(images);
+
+        return dealership;
+    }
+
+    @Override
+    @Transactional
+    public void becomeSeller(Long id, User user) {
+        List<Vehicle> vehicles = vehicleService.findAllByUserId(user.getId());
+
+        Dealership dealership = dealershipService.findById(id);
+
+        vehicles.stream().peek(vehicle -> vehicle.setDealership(dealership)).toList();
+
+        vehicleService.updateAllWithNewDealerships(vehicles);
 
         user.setDealership(dealership);
 

@@ -2,6 +2,7 @@ package com.andriikravchenkoo.carsaleproject.controller;
 
 import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
 import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
+import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -33,7 +32,7 @@ public class DealershipController {
     }
 
     @PostMapping("/create")
-    public String getExecuteCreateDealershipPage(@Valid DealershipDto dealershipDto, BindingResult bindingResult, List<MultipartFile> files, @AuthenticationPrincipal User user, Model model) throws IOException {
+    public String postCreateDealershipPage(@Valid DealershipDto dealershipDto, BindingResult bindingResult, List<MultipartFile> files, @AuthenticationPrincipal User user, Model model) throws IOException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("regions", Region.values());
             return "dealership/create";
@@ -42,5 +41,19 @@ public class DealershipController {
         dealershipServiceFacade.createDealership(dealershipDto, files, user);
 
         return "redirect:/vehicle/home";
+    }
+
+    @GetMapping("/{id}")
+    public String getDealershipPage(@PathVariable Long id, Model model) {
+        Dealership dealership = dealershipServiceFacade.getDealershipWithImages(id);
+        model.addAttribute("images", dealership.getImages());
+        model.addAttribute("dealership", dealership);
+        return "dealership/dealership";
+    }
+
+    @PostMapping("/add-seller")
+    public String postBecomingSeller(@RequestParam("id") Long id, @AuthenticationPrincipal User user) {
+        dealershipServiceFacade.becomeSeller(id, user);
+        return "redirect:/dealership/" + id;
     }
 }

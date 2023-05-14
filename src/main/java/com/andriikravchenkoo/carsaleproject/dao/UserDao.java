@@ -13,6 +13,8 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByDealershipId(Long id);
+
     User save(User user);
 
     User saveDealership(User user);

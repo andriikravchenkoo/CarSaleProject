@@ -35,7 +35,12 @@ public class DealershipDaoImpl implements DealershipDao {
     public Optional<Dealership> findById(Long id) {
         final String SQL = "SELECT * FROM dealerships WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new DealershipRowMapper()));
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new DealershipRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Dealership by this id not found");
+        }
+        return Optional.empty();
     }
 
     @Override
