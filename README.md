@@ -22,6 +22,6 @@ http://localhost:8080/car-sale/announcement/{id} - announcement by id
 
 1. Clone the project locally on your machine
 2. Run schema.sql script
-3. On first run change images:loaded: true to images:loaded: false to initialize images to database. After the first run, the value must be returned to true
+3. On first run change images:loaded: true to images:loaded: false in application.yml to initialize images to database. After the first run, the value must be returned to true
 4. Run data.sql script 
 5. Run application
