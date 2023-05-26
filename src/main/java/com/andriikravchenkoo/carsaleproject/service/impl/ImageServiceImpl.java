@@ -24,17 +24,6 @@ public class ImageServiceImpl implements ImageService {
     private final ImageDao imageDao;
 
     @Override
-    public List<Image> findAllByDealershipId(Long id) {
-        return imageDao.findAllByDealershipId(id).stream().peek(image -> {
-            try {
-                ImageCompressor.decompress(image.getData());
-            } catch (IOException e) {
-                throw new ImageCompressException("Failed decompress Image = " + image.getName());
-            }
-        }).toList();
-    }
-
-    @Override
     public Image findById(Long id) throws IOException {
         Image image = imageDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image with id = " + id + " not found"));
         return Image.builder()
@@ -54,6 +43,28 @@ public class ImageServiceImpl implements ImageService {
                 .type(image.getType())
                 .data(ImageCompressor.decompress(image.getData()))
                 .build();
+    }
+
+    @Override
+    public List<Image> findAllByDealershipId(Long id) {
+        return imageDao.findAllByDealershipId(id).stream().peek(image -> {
+            try {
+                ImageCompressor.decompress(image.getData());
+            } catch (IOException e) {
+                throw new ImageCompressException("Failed decompress Image = " + image.getName());
+            }
+        }).toList();
+    }
+
+    @Override
+    public List<Image> findAllByAnnouncementId(Long id) {
+        return imageDao.findAllByAnnouncementId(id).stream().peek(image -> {
+            try {
+                ImageCompressor.decompress(image.getData());
+            } catch (IOException e) {
+                throw new ImageCompressException("Failed decompress Image = " + image.getName());
+            }
+        }).toList();
     }
 
     @Override

@@ -14,6 +14,8 @@ public interface UserService {
 
     User findByDealershipId(Long id);
 
+    User findByAnnouncementId(Long id);
+
     User save(User user);
 
     User saveDealership(User user);

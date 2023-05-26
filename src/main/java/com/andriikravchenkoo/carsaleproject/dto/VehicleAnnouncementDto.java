@@ -1,16 +1,23 @@
 package com.andriikravchenkoo.carsaleproject.dto;
 
+import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
+import com.andriikravchenkoo.carsaleproject.model.entity.Vehicle;
 import com.andriikravchenkoo.carsaleproject.model.enums.BodyType;
 import com.andriikravchenkoo.carsaleproject.model.enums.Color;
 import com.andriikravchenkoo.carsaleproject.model.enums.EngineType;
 import com.andriikravchenkoo.carsaleproject.model.enums.Transmission;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.util.Date;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class VehicleAnnouncementDto {
 
     @Pattern(regexp = "\\b[(A-H|J-N|P|R-Z|0-9)]{17}\\b", message = "VIN not valid")
@@ -61,4 +68,31 @@ public class VehicleAnnouncementDto {
 
     @NotBlank(message = "Description is required")
     private String description;
+
+    public Announcement toAnnouncementEntity() {
+        return Announcement.builder()
+                .price(this.getPrice())
+                .created(new Date())
+                .isClosed(false)
+                .description(this.getDescription())
+                .build();
+    }
+
+    public Vehicle toVehicleEntity() {
+        return Vehicle.builder()
+                .vin(this.getVin())
+                .brand(this.getBrand())
+                .model(this.getModel())
+                .bodyType(this.getBodyType())
+                .year(this.getYear())
+                .engineType(this.getEngineType())
+                .engineCapacity(this.getEngineCapacity())
+                .horsepower(this.getHorsepower())
+                .transmission(this.getTransmission())
+                .mileage(this.getMileage())
+                .color(this.getColor())
+                .licensePlate(this.getLicensePlate())
+                .isUsed(this.getIsUsed())
+                .build();
+    }
 }

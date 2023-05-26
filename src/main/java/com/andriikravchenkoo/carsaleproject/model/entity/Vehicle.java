@@ -1,6 +1,5 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
-import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.model.enums.BodyType;
 import com.andriikravchenkoo.carsaleproject.model.enums.Color;
 import com.andriikravchenkoo.carsaleproject.model.enums.EngineType;
@@ -62,23 +61,5 @@ public class Vehicle {
         this.color = color;
         this.licensePlate = licensePlate;
         this.isUsed = isUsed;
-    }
-
-    public static Vehicle toEntity(VehicleAnnouncementDto vehicleAnnouncementDto) {
-        return Vehicle.builder()
-                .vin(vehicleAnnouncementDto.getVin())
-                .brand(vehicleAnnouncementDto.getBrand())
-                .model(vehicleAnnouncementDto.getModel())
-                .bodyType(vehicleAnnouncementDto.getBodyType())
-                .year(vehicleAnnouncementDto.getYear())
-                .engineType(vehicleAnnouncementDto.getEngineType())
-                .engineCapacity(vehicleAnnouncementDto.getEngineCapacity())
-                .horsepower(vehicleAnnouncementDto.getHorsepower())
-                .transmission(vehicleAnnouncementDto.getTransmission())
-                .mileage(vehicleAnnouncementDto.getMileage())
-                .color(vehicleAnnouncementDto.getColor())
-                .licensePlate(vehicleAnnouncementDto.getLicensePlate())
-                .isUsed(vehicleAnnouncementDto.getIsUsed())
-                .build();
     }
 }

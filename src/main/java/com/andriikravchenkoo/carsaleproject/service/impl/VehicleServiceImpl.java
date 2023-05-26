@@ -29,7 +29,12 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle findById(Long id) {
-        return vehicleDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle with ID = " + id + " not found"));
+        return vehicleDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle with id = " + id + " not found"));
+    }
+
+    @Override
+    public Vehicle findByAnnouncementId(Long id) {
+        return vehicleDao.findByAnnouncementId(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle by announcement id = " + id + " not found"));
     }
 
     @Override

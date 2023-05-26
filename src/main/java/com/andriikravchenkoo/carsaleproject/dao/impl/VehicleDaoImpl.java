@@ -52,6 +52,18 @@ public class VehicleDaoImpl implements VehicleDao {
     }
 
     @Override
+    public Optional<Vehicle> findByAnnouncementId(Long id) {
+        String SQL = "SELECT v.* FROM vehicles v JOIN announcements a ON v.id = a.vehicle_id WHERE a.id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new VehicleRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("Vehicle by this announcement id not found");
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Vehicle save(Vehicle vehicle) {
         final String SQL = "INSERT INTO vehicles (vin, brand, model, body_type, year, engine_type, engine_capacity, horsepower, transmission, mileage, color, license_plate, is_used, dealership_id) VALUES (:vin, :brand, :model, :body_type, :year, :engine_type, :engine_capacity, :horsepower, :transmission, :mileage, :color, :license_plate, :is_used, :dealership_id)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()

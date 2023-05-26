@@ -68,6 +68,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public Optional<User> findByAnnouncementId(Long id) {
+        final String SQL = "SELECT u.* FROM users u JOIN announcements a ON u.id = a.user_id WHERE a.id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, new UserRowMapper()));
+        } catch (EmptyResultDataAccessException exception) {
+            log.error("User with this announcement id not found");
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public User save(User user) {
         final String SQL = "INSERT INTO users (firstname, lastname, email, password, phone_number, role) VALUES (:firstname, :lastname, :email, :password, :phone_number, :role)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()

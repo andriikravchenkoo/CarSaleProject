@@ -33,7 +33,7 @@ public class AfterInitContextConfig {
         if (!imagesLoaded) {
             try {
                 PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-                List<Resource> resources = Arrays.asList(resolver.getResources("classpath*:static/images/init/*.jpg"));
+                List<Resource> resources = Arrays.asList(resolver.getResources("classpath*:static/images/init/*"));
                 List<MultipartFile> files = resources.stream()
                         .map(file -> {
                             try {

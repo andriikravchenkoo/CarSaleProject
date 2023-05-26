@@ -13,5 +13,5 @@ public interface DealershipServiceFacade {
 
     Dealership getDealershipWithImages(Long id);
 
-    void becomeSeller(Long id, User user);
+    void becomeSeller(Long dealershipId, User user);
 }

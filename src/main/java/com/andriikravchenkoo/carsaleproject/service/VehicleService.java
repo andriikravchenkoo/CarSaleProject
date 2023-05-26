@@ -12,6 +12,8 @@ public interface VehicleService {
 
     Vehicle findById(Long id);
 
+    Vehicle findByAnnouncementId(Long id);
+
     Vehicle save(Vehicle vehicle);
 
     Long updateAllWithNewDealerships(List<Vehicle> vehicles);

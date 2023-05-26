@@ -52,8 +52,8 @@ public class DealershipController {
     }
 
     @PostMapping("/add-seller")
-    public String postBecomingSeller(@RequestParam("id") Long id, @AuthenticationPrincipal User user) {
-        dealershipServiceFacade.becomeSeller(id, user);
-        return "redirect:/dealership/" + id;
+    public String postBecomingSellerInDealership(@RequestParam("dealershipId") Long dealershipId, @AuthenticationPrincipal User user) {
+        dealershipServiceFacade.becomeSeller(dealershipId, user);
+        return "redirect:/dealership/" + dealershipId;
     }
 }

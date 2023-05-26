@@ -1,5 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.controller;
 
+import com.andriikravchenkoo.carsaleproject.dto.AnnouncementWithFavoritesDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
@@ -9,12 +10,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -35,7 +35,7 @@ public class AnnouncementController {
     }
 
     @PostMapping("/create")
-    public String postAnnouncementPage(@Valid VehicleAnnouncementDto vehicleAnnouncementDto, BindingResult bindingResult, List<MultipartFile> files, @AuthenticationPrincipal User user, Model model) {
+    public String postCreateAnnouncementPage(@Valid VehicleAnnouncementDto vehicleAnnouncementDto, BindingResult bindingResult, List<MultipartFile> files, @AuthenticationPrincipal User user, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bodyTypes", BodyType.values());
             model.addAttribute("engineTypes", EngineType.values());
@@ -47,5 +47,29 @@ public class AnnouncementController {
         announcementServiceFacade.createAnnouncement(vehicleAnnouncementDto, files, user);
 
         return "redirect:/vehicle/home";
+    }
+
+    @GetMapping("/{id}")
+    public String getAnnouncementPage(@PathVariable Long id, @AuthenticationPrincipal User user, Model model) throws IOException {
+        AnnouncementWithFavoritesDto announcement = announcementServiceFacade.getAnnouncementWithImages(id, user);
+        model.addAttribute("images", announcement.getImages());
+        model.addAttribute("dealership", announcement.getUser().getDealership());
+        model.addAttribute("user", announcement.getUser());
+        model.addAttribute("image", announcement.getUser().getImage());
+        model.addAttribute("vehicle", announcement.getVehicle());
+        model.addAttribute("announcement", announcement);
+        return "announcement/announcement";
+    }
+
+    @PostMapping("/add-to-favorites")
+    public String postAddAnnouncementToFavorites(@RequestParam("announcementId") Long announcementId, @AuthenticationPrincipal User user) {
+        announcementServiceFacade.addAnnouncementToFavorites(announcementId, user.getId());
+        return "redirect:/announcement/" + announcementId;
+    }
+
+    @PostMapping("/remove-from-favorites")
+    public String postRemoveAnnouncementFromFavorites(@RequestParam("announcementId") Long announcementId, @AuthenticationPrincipal User user) {
+        announcementServiceFacade.removeAnnouncementFromFavorites(announcementId, user.getId());
+        return "redirect:/announcement/" + announcementId;
     }
 }

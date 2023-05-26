@@ -15,6 +15,8 @@ public interface UserDao {
 
     Optional<User> findByDealershipId(Long id);
 
+    Optional<User> findByAnnouncementId(Long id);
+
     User save(User user);
 
     User saveDealership(User user);

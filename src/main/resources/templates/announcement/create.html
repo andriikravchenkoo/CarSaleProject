@@ -117,7 +117,7 @@
             </div>
 
             <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('create')}">
-                <label class="form-label" for="price">Price</label>
+                <label class="form-label" for="price">Price in dollars</label>
                 <input class="form-control" id="price" name="price" th:value="${vehicleAnnouncementDto.price}"
                        type="number" pattern="\d+">
             </div>

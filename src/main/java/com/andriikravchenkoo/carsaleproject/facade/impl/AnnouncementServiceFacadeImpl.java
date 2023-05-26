@@ -1,17 +1,16 @@
 package com.andriikravchenkoo.carsaleproject.facade.impl;
 
+import com.andriikravchenkoo.carsaleproject.dto.AnnouncementWithFavoritesDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.*;
-import com.andriikravchenkoo.carsaleproject.service.AnnouncementService;
-import com.andriikravchenkoo.carsaleproject.service.DealershipService;
-import com.andriikravchenkoo.carsaleproject.service.ImageService;
-import com.andriikravchenkoo.carsaleproject.service.VehicleService;
+import com.andriikravchenkoo.carsaleproject.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -26,10 +25,14 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
     private final ImageService imageService;
 
+    private final UserService userService;
+
+    private final FavoritesService favoritesService;
+
     @Override
     @Transactional
     public void createAnnouncement(VehicleAnnouncementDto vehicleAnnouncementDto, List<MultipartFile> files, User user) {
-        Vehicle vehicle = Vehicle.toEntity(vehicleAnnouncementDto);
+        Vehicle vehicle = vehicleAnnouncementDto.toVehicleEntity();
 
         Dealership dealership = dealershipService.findByUserEmail(user.getEmail());
 
@@ -37,7 +40,7 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
         List<Image> images = imageService.saveAll(files);
 
-        Announcement announcement = Announcement.toEntity(vehicleAnnouncementDto);
+        Announcement announcement = vehicleAnnouncementDto.toAnnouncementEntity();
 
         announcement.setImages(images);
 
@@ -50,5 +53,44 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
         Announcement savedAnnouncement = announcementService.save(announcement);
 
         imageService.saveAllAnnouncementImages(savedAnnouncement);
+    }
+
+    @Override
+    public AnnouncementWithFavoritesDto getAnnouncementWithImages(Long id, User currentUser) throws IOException {
+        List<Image> images = imageService.findAllByAnnouncementId(id);
+
+        Announcement announcement = announcementService.findById(id);
+
+        Vehicle vehicle = vehicleService.findByAnnouncementId(id);
+
+        User ownerAnnouncement = userService.findByAnnouncementId(id);
+
+        Image image = imageService.findByUserId(ownerAnnouncement.getId());
+
+        Dealership dealership = dealershipService.findByUserEmail(ownerAnnouncement.getEmail());
+
+        ownerAnnouncement.setImage(image);
+
+        ownerAnnouncement.setDealership(dealership);
+
+        announcement.setImages(images);
+
+        announcement.setUser(ownerAnnouncement);
+
+        announcement.setVehicle(vehicle);
+
+        Favorites favorites = new Favorites(currentUser.getId(), id);
+
+        return announcement.toDto(favoritesService.checkExistence(favorites));
+    }
+
+    @Override
+    public void addAnnouncementToFavorites(Long announcementId, Long userId) {
+        favoritesService.save(new Favorites(userId, announcementId));
+    }
+
+    @Override
+    public void removeAnnouncementFromFavorites(Long announcementId, Long userId) {
+        favoritesService.delete(new Favorites(userId, announcementId));
     }
 }

@@ -1,6 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
-import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
+import com.andriikravchenkoo.carsaleproject.dto.AnnouncementWithFavoritesDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,12 +38,17 @@ public class Announcement {
         this.description = description;
     }
 
-    public static Announcement toEntity(VehicleAnnouncementDto vehicleAnnouncementDto) {
-        return Announcement.builder()
-                .price(vehicleAnnouncementDto.getPrice())
-                .created(new Date())
-                .isClosed(false)
-                .description(vehicleAnnouncementDto.getDescription())
+    public AnnouncementWithFavoritesDto toDto(boolean isFavorite) {
+        return AnnouncementWithFavoritesDto.builder()
+                .id(this.getId())
+                .price(this.getPrice())
+                .created(this.getCreated())
+                .isClosed(this.getIsClosed())
+                .description(this.getDescription())
+                .images(this.getImages())
+                .user(this.getUser())
+                .vehicle(this.getVehicle())
+                .isFavorite(isFavorite)
                 .build();
     }
 }

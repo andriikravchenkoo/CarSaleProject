@@ -32,7 +32,7 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
     @Override
     @Transactional
     public void createDealership(DealershipDto dealershipDto, List<MultipartFile> files, User user) {
-        Dealership dealership = dealershipService.save(Dealership.toEntity(dealershipDto));
+        Dealership dealership = dealershipService.save(dealershipDto.toEntity());
 
         List<Image> images = imageService.saveAll(files);
 
@@ -58,10 +58,10 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
     @Override
     @Transactional
-    public void becomeSeller(Long id, User user) {
+    public void becomeSeller(Long dealershipId, User user) {
         List<Vehicle> vehicles = vehicleService.findAllByUserId(user.getId());
 
-        Dealership dealership = dealershipService.findById(id);
+        Dealership dealership = dealershipService.findById(dealershipId);
 
         vehicles.stream().peek(vehicle -> vehicle.setDealership(dealership)).toList();
 

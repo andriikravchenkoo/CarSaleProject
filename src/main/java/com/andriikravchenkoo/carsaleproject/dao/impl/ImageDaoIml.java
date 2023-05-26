@@ -29,13 +29,6 @@ public class ImageDaoIml implements ImageDao {
     private final KeyHolder keyHolder;
 
     @Override
-    public List<Image> findAllByDealershipId(Long id) {
-        final String SQL = "SELECT i.* FROM images i JOIN dealerships_images di ON i.id = di.image_id JOIN dealerships d ON d.id = di.dealership_id WHERE d.id = :id";
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
-        return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new ImageRowMapper());
-    }
-
-    @Override
     public Optional<Image> findById(Long id) {
         final String SQL = "SELECT * FROM images WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
@@ -57,6 +50,20 @@ public class ImageDaoIml implements ImageDao {
             log.error("Image by this user id not found");
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<Image> findAllByDealershipId(Long id) {
+        final String SQL = "SELECT i.* FROM images i JOIN dealerships_images di ON i.id = di.image_id JOIN dealerships d ON d.id = di.dealership_id WHERE d.id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new ImageRowMapper());
+    }
+
+    @Override
+    public List<Image> findAllByAnnouncementId(Long id) {
+        final String SQL = "SELECT i.* FROM images i JOIN announcements_images ai ON i.id = ai.image_id JOIN announcements a ON a.id = ai.announcement_id WHERE a.id = :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new ImageRowMapper());
     }
 
     @Override

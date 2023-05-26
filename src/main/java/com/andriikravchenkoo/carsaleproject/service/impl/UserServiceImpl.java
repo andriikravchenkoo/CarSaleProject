@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByAnnouncementId(Long id) {
+        return userDao.findByAnnouncementId(id).orElseThrow(() -> new ResourceNotFoundException("User by announcement id = " + id + " not found"));
+    }
+
+    @Override
     public User save(User user) {
         try {
             return userDao.save(user);

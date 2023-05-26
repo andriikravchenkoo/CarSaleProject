@@ -11,11 +11,13 @@ import java.util.List;
 
 public interface ImageService {
 
-    List<Image> findAllByDealershipId(Long id);
-
     Image findById(Long id) throws IOException;
 
     Image findByUserId(Long id) throws IOException;
+
+    List<Image> findAllByDealershipId(Long id);
+
+    List<Image> findAllByAnnouncementId(Long id);
 
     Image save(MultipartFile file) throws IOException;
 

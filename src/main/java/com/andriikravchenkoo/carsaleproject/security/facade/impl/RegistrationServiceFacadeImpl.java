@@ -27,7 +27,7 @@ public class RegistrationServiceFacadeImpl implements RegistrationServiceFacade 
     @Override
     @Transactional
     public void register(RegisterRequestDto registerRequestDto, MultipartFile file) throws IOException {
-        User user = userService.save(User.toEntity(registerRequestDto, passwordEncoder));
+        User user = userService.save(registerRequestDto.toEntity(passwordEncoder));
 
         Image image = imageService.save(file);
 

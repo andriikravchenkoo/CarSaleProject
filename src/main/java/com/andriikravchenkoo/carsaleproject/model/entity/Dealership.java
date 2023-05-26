@@ -1,6 +1,5 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
-import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,15 +38,5 @@ public class Dealership {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.description = description;
-    }
-
-    public static Dealership toEntity(DealershipDto dealershipDto) {
-        return Dealership.builder()
-                .name(dealershipDto.getName())
-                .region(dealershipDto.getRegion())
-                .address(dealershipDto.getAddress())
-                .phoneNumber(dealershipDto.getPhoneNumber())
-                .description(dealershipDto.getDescription())
-                .build();
     }
 }

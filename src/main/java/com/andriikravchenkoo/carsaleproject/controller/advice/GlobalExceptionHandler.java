@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
             return modelAndView;
         } else {
             modelAndView = new ModelAndView("error");
-            modelAndView.addObject("statusCode", HttpStatus.NOT_FOUND);
+            modelAndView.addObject("statusCode", HttpStatus.CONFLICT);
             modelAndView.addObject("timestamp", new Date());
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             return modelAndView;
@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
             return modelAndView;
         } else {
             modelAndView = new ModelAndView("error");
-            modelAndView.addObject("statusCode", HttpStatus.NOT_FOUND);
+            modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST);
             modelAndView.addObject("timestamp", new Date());
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
             return modelAndView;
