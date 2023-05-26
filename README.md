@@ -1,5 +1,11 @@
 # Car Sale Project
 
+## Profiles passwords
+
+All sellers - **seller**
+
+All customers - **customer**
+
 ## Endpoints
 
 http://localhost:8080/car-sale/vehicle/home - home page
