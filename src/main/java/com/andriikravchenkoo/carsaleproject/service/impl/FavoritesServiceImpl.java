@@ -10,21 +10,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FavoritesServiceImpl implements FavoritesService {
 
-    private final FavoritesDao favoritesDao;
+  private final FavoritesDao favoritesDao;
 
-    @Override
-    public Favorites save(Favorites favorites) {
-        return favoritesDao.save(favorites);
-    }
+  @Override
+  public Favorites save(Favorites favorites) {
+    return favoritesDao.save(favorites);
+  }
 
-    @Override
-    public void delete(Favorites favorites) {
-        favoritesDao.delete(favorites);
-    }
+  @Override
+  public void delete(Favorites favorites) {
+    favoritesDao.delete(favorites);
+  }
 
-    @Override
-    public boolean checkExistence(Favorites favorites) {
-        Long result = favoritesDao.checkExistence(favorites);
-        return result != null && result > 0;
-    }
+  @Override
+  public boolean checkExistence(Favorites favorites) {
+    Long result = favoritesDao.checkExistence(favorites);
+    return result != null && result > 0;
+  }
 }

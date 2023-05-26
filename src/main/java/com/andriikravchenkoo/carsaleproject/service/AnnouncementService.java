@@ -1,16 +1,15 @@
 package com.andriikravchenkoo.carsaleproject.service;
 
 import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
-
 import java.util.List;
 
 public interface AnnouncementService {
 
-    List<Announcement> findAll();
+  List<Announcement> findAll();
 
-    Announcement findById(Long id);
+  Announcement findById(Long id);
 
-    Announcement save(Announcement announcement);
+  Announcement save(Announcement announcement);
 
-    void delete(Announcement announcement);
+  void delete(Announcement announcement);
 }

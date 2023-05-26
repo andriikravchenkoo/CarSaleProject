@@ -2,10 +2,9 @@ package com.andriikravchenkoo.carsaleproject.exception;
 
 public class ImageNotSavedException extends RuntimeException {
 
-    public ImageNotSavedException() {
-    }
+  public ImageNotSavedException() {}
 
-    public ImageNotSavedException(String message) {
-        super(message);
-    }
+  public ImageNotSavedException(String message) {
+    super(message);
+  }
 }
