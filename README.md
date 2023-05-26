@@ -10,6 +10,8 @@ http://localhost:8080/car-sale/dealership/{id} - dealership by id
 
 http://localhost:8080/car-sale/announcement/create - create announcement
 
+http://localhost:8080/car-sale/announcement/{id} - announcement by id
+
 ## Contributing
 
 1. Clone the project locally on your machine
