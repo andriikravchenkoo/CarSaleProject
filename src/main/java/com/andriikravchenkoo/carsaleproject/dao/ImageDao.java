@@ -17,6 +17,8 @@ public interface ImageDao {
 
   List<Image> findAllByAnnouncementId(Long id);
 
+  Integer findRowCount();
+
   Image save(Image image);
 
   List<Image> saveAll(List<Image> images);

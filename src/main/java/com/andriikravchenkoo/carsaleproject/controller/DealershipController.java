@@ -5,7 +5,6 @@ import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
-import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +35,7 @@ public class DealershipController {
       BindingResult bindingResult,
       List<MultipartFile> files,
       @AuthenticationPrincipal User user,
-      Model model)
-      throws IOException {
+      Model model) {
     if (bindingResult.hasErrors()) {
       model.addAttribute("regions", Region.values());
       return "dealership/create";

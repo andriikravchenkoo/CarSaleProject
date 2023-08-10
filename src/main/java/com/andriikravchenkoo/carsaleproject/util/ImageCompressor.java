@@ -1,34 +1,51 @@
 package com.andriikravchenkoo.carsaleproject.util;
 
-import java.io.ByteArrayInputStream;
+import com.andriikravchenkoo.carsaleproject.exception.ImageCompressException;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ImageCompressor {
 
-  public static byte[] compress(byte[] data) throws IOException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    DeflaterOutputStream deflaterStream =
-        new DeflaterOutputStream(outputStream, new Deflater(Deflater.BEST_COMPRESSION));
-    deflaterStream.write(data);
+  public static byte[] compress(byte[] data) {
+    Deflater deflater = new Deflater();
+    deflater.setLevel(Deflater.BEST_COMPRESSION);
+    deflater.setInput(data);
+    deflater.finish();
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+    byte[] buffer = new byte[4 * 1024];
+
+    while (!deflater.finished()) {
+      int compressedSize = deflater.deflate(buffer);
+      outputStream.write(buffer, 0, compressedSize);
+    }
+
+    deflater.end();
+
     return outputStream.toByteArray();
   }
 
-  public static byte[] decompress(byte[] data) throws IOException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    InflaterInputStream inflaterStream =
-        new InflaterInputStream(new ByteArrayInputStream(data), new Inflater());
-    byte[] buffer = new byte[1024];
-    int length;
-    while ((length = inflaterStream.read(buffer)) != -1) {
-      outputStream.write(buffer, 0, length);
+  public static byte[] decompress(byte[] data) {
+    Inflater inflater = new Inflater();
+    inflater.setInput(data);
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+    byte[] buffer = new byte[4 * 1024];
+
+    try {
+      while (!inflater.finished()) {
+        int decompressedSize = inflater.inflate(buffer);
+        outputStream.write(buffer, 0, decompressedSize);
+      }
+    } catch (Exception e) {
+      throw new ImageCompressException("Failed decompress Image");
+    } finally {
+      inflater.end();
     }
+
     return outputStream.toByteArray();
   }
 }

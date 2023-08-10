@@ -62,9 +62,10 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
     Dealership dealership = dealershipService.findById(dealershipId);
 
-    vehicles.stream().peek(vehicle -> vehicle.setDealership(dealership)).toList();
+    List<Vehicle> savedVehicles =
+        vehicles.stream().peek(vehicle -> vehicle.setDealership(dealership)).toList();
 
-    vehicleService.updateAllWithNewDealerships(vehicles);
+    vehicleService.updateAllWithNewDealerships(savedVehicles);
 
     user.setDealership(dealership);
 

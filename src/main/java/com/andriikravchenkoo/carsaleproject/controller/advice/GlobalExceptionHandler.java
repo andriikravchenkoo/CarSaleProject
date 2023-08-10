@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DataAlreadyExistsException.class)
   public ModelAndView handleDataAlreadyExistsException(
       DataAlreadyExistsException exception, WebRequest webRequest) {
-    final String requestUrl = webRequest.getDescription(false);
+    final String requestUrl = getRequestUrl(webRequest);
     ModelAndView modelAndView;
     if (requestUrl.contains("/authentication/register")) {
       modelAndView = new ModelAndView("authentication/register");

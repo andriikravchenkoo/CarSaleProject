@@ -6,6 +6,7 @@ import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,6 +69,12 @@ public class ImageDaoIml implements ImageDao {
         "SELECT i.* FROM images i JOIN announcements_images ai ON i.id = ai.image_id JOIN announcements a ON a.id = ai.announcement_id WHERE a.id = :id";
     SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
     return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new ImageRowMapper());
+  }
+
+  @Override
+  public Integer findRowCount() {
+    final String SQL = "SELECT COUNT(*) FROM images";
+    return namedParameterJdbcTemplate.queryForObject(SQL, new HashMap<>(), Integer.class);
   }
 
   @Override

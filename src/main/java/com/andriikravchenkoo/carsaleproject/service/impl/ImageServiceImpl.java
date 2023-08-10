@@ -23,7 +23,7 @@ public class ImageServiceImpl implements ImageService {
   private final ImageDao imageDao;
 
   @Override
-  public Image findById(Long id) throws IOException {
+  public Image findById(Long id) {
     Image image =
         imageDao
             .findById(id)
@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public Image findByUserId(Long id) throws IOException {
+  public Image findByUserId(Long id) {
     Image image =
         imageDao
             .findByUserId(id)
@@ -57,11 +57,7 @@ public class ImageServiceImpl implements ImageService {
     return imageDao.findAllByDealershipId(id).stream()
         .peek(
             image -> {
-              try {
-                ImageCompressor.decompress(image.getData());
-              } catch (IOException e) {
-                throw new ImageCompressException("Failed decompress Image = " + image.getName());
-              }
+              ImageCompressor.decompress(image.getData());
             })
         .toList();
   }
@@ -71,13 +67,14 @@ public class ImageServiceImpl implements ImageService {
     return imageDao.findAllByAnnouncementId(id).stream()
         .peek(
             image -> {
-              try {
-                ImageCompressor.decompress(image.getData());
-              } catch (IOException e) {
-                throw new ImageCompressException("Failed decompress Image = " + image.getName());
-              }
+              ImageCompressor.decompress(image.getData());
             })
         .toList();
+  }
+
+  @Override
+  public Boolean checkCountImage() {
+    return imageDao.findRowCount() == 0;
   }
 
   @Override

@@ -41,7 +41,7 @@ public class VehicleDaoImpl implements VehicleDao {
 
   @Override
   public Optional<Vehicle> findById(Long id) {
-    String SQL = "SELECT * FROM vehicles WHERE id = :id";
+    final String SQL = "SELECT * FROM vehicles WHERE id = :id";
     SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
     try {
       return Optional.ofNullable(
@@ -55,7 +55,7 @@ public class VehicleDaoImpl implements VehicleDao {
 
   @Override
   public Optional<Vehicle> findByAnnouncementId(Long id) {
-    String SQL =
+    final String SQL =
         "SELECT v.* FROM vehicles v JOIN announcements a ON v.id = a.vehicle_id WHERE a.id = :id";
     SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
     try {

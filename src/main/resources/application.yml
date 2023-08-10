@@ -12,6 +12,3 @@ spring:
 server:
   servlet:
     context-path: /car-sale
-
-images:
-  loaded: true

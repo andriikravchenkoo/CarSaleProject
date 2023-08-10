@@ -18,6 +18,8 @@ public interface ImageService {
 
   List<Image> findAllByAnnouncementId(Long id);
 
+  Boolean checkCountImage();
+
   Image save(MultipartFile file) throws IOException;
 
   List<Image> saveAll(List<MultipartFile> files);
