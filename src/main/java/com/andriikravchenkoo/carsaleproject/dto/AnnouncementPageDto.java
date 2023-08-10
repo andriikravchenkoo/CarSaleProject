@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AnnouncementWithFavoritesDto {
+public class AnnouncementPageDto {
 
   private Long id;
 
@@ -32,7 +32,9 @@ public class AnnouncementWithFavoritesDto {
 
   private Boolean isFavorite;
 
-  public AnnouncementWithFavoritesDto(
+  private Boolean isOwner;
+
+  public AnnouncementPageDto(
       Integer price,
       Date created,
       Boolean isClosed,
@@ -40,7 +42,8 @@ public class AnnouncementWithFavoritesDto {
       List<Image> images,
       User user,
       Vehicle vehicle,
-      Boolean isFavorite) {
+      Boolean isFavorite,
+      Boolean isOwner) {
     this.price = price;
     this.created = created;
     this.isClosed = isClosed;
@@ -49,5 +52,6 @@ public class AnnouncementWithFavoritesDto {
     this.user = user;
     this.vehicle = vehicle;
     this.isFavorite = isFavorite;
+    this.isOwner = isOwner;
   }
 }

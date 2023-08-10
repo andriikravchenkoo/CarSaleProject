@@ -1,6 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.controller;
 
-import com.andriikravchenkoo.carsaleproject.dto.AnnouncementWithFavoritesDto;
+import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
@@ -56,7 +56,7 @@ public class AnnouncementController {
   @GetMapping("/{id}")
   public String getAnnouncementPage(
       @PathVariable Long id, @AuthenticationPrincipal User user, Model model) throws IOException {
-    AnnouncementWithFavoritesDto announcement =
+    AnnouncementPageDto announcement =
         announcementServiceFacade.getAnnouncementWithImages(id, user);
     model.addAttribute("images", announcement.getImages());
     model.addAttribute("dealership", announcement.getUser().getDealership());
@@ -79,5 +79,11 @@ public class AnnouncementController {
       @RequestParam("announcementId") Long announcementId, @AuthenticationPrincipal User user) {
     announcementServiceFacade.removeAnnouncementFromFavorites(announcementId, user.getId());
     return "redirect:/announcement/" + announcementId;
+  }
+
+  @PostMapping("/remove")
+  public String postRemoveAnnouncement(@RequestParam("announcementId") Long announcementId) {
+    announcementServiceFacade.deleteAnnouncement(announcementId);
+    return "redirect:/vehicle/home";
   }
 }

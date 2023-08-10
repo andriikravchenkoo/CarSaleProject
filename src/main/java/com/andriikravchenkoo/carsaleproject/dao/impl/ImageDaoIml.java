@@ -155,4 +155,12 @@ public class ImageDaoIml implements ImageDao {
                 SQL, sqlParameterSources.toArray(new SqlParameterSource[0]))
             .length;
   }
+
+  @Override
+  public void deleteAllAnnouncementImages(Announcement announcement) {
+    final String SQL = "DELETE FROM announcements_images WHERE announcement_id = :announcement_id";
+    SqlParameterSource sqlParameterSource =
+        new MapSqlParameterSource("announcement_id", announcement.getId());
+    namedParameterJdbcTemplate.update(SQL, sqlParameterSource);
+  }
 }

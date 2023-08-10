@@ -23,6 +23,11 @@ public class FavoritesServiceImpl implements FavoritesService {
   }
 
   @Override
+  public void deleteAllByAnnouncementId(Long announcementId) {
+    favoritesDao.deleteAllByAnnouncementId(announcementId);
+  }
+
+  @Override
   public boolean checkExistence(Favorites favorites) {
     Long result = favoritesDao.checkExistence(favorites);
     return result != null && result > 0;

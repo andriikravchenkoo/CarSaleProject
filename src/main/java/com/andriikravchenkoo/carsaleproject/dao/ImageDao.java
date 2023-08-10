@@ -28,4 +28,6 @@ public interface ImageDao {
   Long saveAllDealershipImages(Dealership dealership);
 
   Long saveAllAnnouncementImages(Announcement announcement);
+
+  void deleteAllAnnouncementImages(Announcement announcement);
 }

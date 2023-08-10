@@ -1,6 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.facade.impl;
 
-import com.andriikravchenkoo.carsaleproject.dto.AnnouncementWithFavoritesDto;
+import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.*;
@@ -56,15 +56,15 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
   }
 
   @Override
-  public AnnouncementWithFavoritesDto getAnnouncementWithImages(Long id, User currentUser)
+  public AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User currentUser)
       throws IOException {
-    List<Image> images = imageService.findAllByAnnouncementId(id);
+    List<Image> images = imageService.findAllByAnnouncementId(announcementId);
 
-    Announcement announcement = announcementService.findById(id);
+    Announcement announcement = announcementService.findById(announcementId);
 
-    Vehicle vehicle = vehicleService.findByAnnouncementId(id);
+    Vehicle vehicle = vehicleService.findByAnnouncementId(announcementId);
 
-    User ownerAnnouncement = userService.findByAnnouncementId(id);
+    User ownerAnnouncement = userService.findByAnnouncementId(announcementId);
 
     Image image = imageService.findByUserId(ownerAnnouncement.getId());
 
@@ -80,9 +80,22 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
     announcement.setVehicle(vehicle);
 
-    Favorites favorites = new Favorites(currentUser.getId(), id);
+    Favorites favorites = new Favorites(currentUser.getId(), announcementId);
 
-    return announcement.toDto(favoritesService.checkExistence(favorites));
+    return announcement.toDto(
+        favoritesService.checkExistence(favorites),
+        announcementService.checkOwner(announcementId, currentUser.getId()));
+  }
+
+  @Override
+  @Transactional
+  public void deleteAnnouncement(Long announcementId) {
+    Vehicle vehicle = vehicleService.findByAnnouncementId(announcementId);
+    Announcement announcement = announcementService.findById(announcementId);
+    favoritesService.deleteAllByAnnouncementId(announcementId);
+    imageService.deleteAllAnnouncementImages(announcement);
+    announcementService.delete(announcement);
+    vehicleService.delete(vehicle);
   }
 
   @Override

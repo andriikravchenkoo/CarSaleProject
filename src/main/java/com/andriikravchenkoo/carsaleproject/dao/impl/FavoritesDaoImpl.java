@@ -43,6 +43,14 @@ public class FavoritesDaoImpl implements FavoritesDao {
   }
 
   @Override
+  public void deleteAllByAnnouncementId(Long announcementId) {
+    final String SQL = "DELETE FROM favorites WHERE announcement_id = :announcement_id";
+    SqlParameterSource sqlParameterSource =
+        new MapSqlParameterSource("announcement_id", announcementId);
+    namedParameterJdbcTemplate.update(SQL, sqlParameterSource);
+  }
+
+  @Override
   public Long checkExistence(Favorites favorites) {
     final String SQL =
         "SELECT COUNT(*) FROM favorites WHERE user_id = :user_id AND announcement_id = :announcement_id";

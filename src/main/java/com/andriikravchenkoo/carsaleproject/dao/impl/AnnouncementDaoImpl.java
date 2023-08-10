@@ -67,4 +67,15 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", announcement.getId());
     namedParameterJdbcTemplate.update(SQL, sqlParameterSource);
   }
+
+  @Override
+  public Long checkOwner(Long announcementId, Long userId) {
+    final String SQL =
+        "SELECT COUNT(*) AS count_owner FROM announcements AS a JOIN users AS u ON a.user_id = u.id WHERE a.id = :announcement_id AND u.id = :user_id";
+    SqlParameterSource sqlParameterSource =
+        new MapSqlParameterSource()
+            .addValue("announcement_id", announcementId)
+            .addValue("user_id", userId);
+    return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+  }
 }

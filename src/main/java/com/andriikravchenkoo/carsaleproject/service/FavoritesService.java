@@ -8,5 +8,7 @@ public interface FavoritesService {
 
   void delete(Favorites favorites);
 
+  void deleteAllByAnnouncementId(Long announcementId);
+
   boolean checkExistence(Favorites favorites);
 }

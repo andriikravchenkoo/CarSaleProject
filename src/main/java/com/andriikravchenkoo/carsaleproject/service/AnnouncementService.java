@@ -12,4 +12,6 @@ public interface AnnouncementService {
   Announcement save(Announcement announcement);
 
   void delete(Announcement announcement);
+
+  boolean checkOwner(Long announcementId, Long userId);
 }

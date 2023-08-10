@@ -1,6 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
-import com.andriikravchenkoo.carsaleproject.dto.AnnouncementWithFavoritesDto;
+import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -37,8 +37,8 @@ public class Announcement {
     this.description = description;
   }
 
-  public AnnouncementWithFavoritesDto toDto(boolean isFavorite) {
-    return AnnouncementWithFavoritesDto.builder()
+  public AnnouncementPageDto toDto(Boolean isFavorite, Boolean isOwner) {
+    return AnnouncementPageDto.builder()
         .id(this.getId())
         .price(this.getPrice())
         .created(this.getCreated())
@@ -48,6 +48,7 @@ public class Announcement {
         .user(this.getUser())
         .vehicle(this.getVehicle())
         .isFavorite(isFavorite)
+        .isOwner(isOwner)
         .build();
   }
 }

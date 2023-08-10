@@ -36,4 +36,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
   public void delete(Announcement announcement) {
     announcementDao.delete(announcement);
   }
+
+  @Override
+  public boolean checkOwner(Long announcementId, Long userId) {
+    return announcementDao.checkOwner(announcementId, userId) == 1;
+  }
 }

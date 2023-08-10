@@ -122,4 +122,9 @@ public class ImageServiceImpl implements ImageService {
   public Long saveAllAnnouncementImages(Announcement announcement) {
     return imageDao.saveAllAnnouncementImages(announcement);
   }
+
+  @Override
+  public void deleteAllAnnouncementImages(Announcement announcement) {
+    imageDao.deleteAllAnnouncementImages(announcement);
+  }
 }

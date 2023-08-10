@@ -13,4 +13,6 @@ public interface AnnouncementDao {
   Announcement save(Announcement announcement);
 
   void delete(Announcement announcement);
+
+  Long checkOwner(Long announcementId, Long userId);
 }

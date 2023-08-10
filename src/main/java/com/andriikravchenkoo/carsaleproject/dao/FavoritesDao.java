@@ -8,5 +8,7 @@ public interface FavoritesDao {
 
   void delete(Favorites favorites);
 
+  void deleteAllByAnnouncementId(Long announcementId);
+
   Long checkExistence(Favorites favorites);
 }
