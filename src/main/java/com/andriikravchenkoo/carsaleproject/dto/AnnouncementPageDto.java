@@ -30,6 +30,8 @@ public class AnnouncementPageDto {
 
   private Vehicle vehicle;
 
+  private Dealership dealership;
+
   private Boolean isFavorite;
 
   private Boolean isOwner;
@@ -42,6 +44,7 @@ public class AnnouncementPageDto {
       List<Image> images,
       User user,
       Vehicle vehicle,
+      Dealership dealership,
       Boolean isFavorite,
       Boolean isOwner) {
     this.price = price;
@@ -51,6 +54,7 @@ public class AnnouncementPageDto {
     this.images = images;
     this.user = user;
     this.vehicle = vehicle;
+    this.dealership = dealership;
     this.isFavorite = isFavorite;
     this.isOwner = isOwner;
   }

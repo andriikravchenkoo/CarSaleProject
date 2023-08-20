@@ -3,6 +3,7 @@ package com.andriikravchenkoo.carsaleproject.dao.impl;
 import com.andriikravchenkoo.carsaleproject.dao.AnnouncementDao;
 import com.andriikravchenkoo.carsaleproject.dao.mapper.AnnouncementRowMapper;
 import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,15 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
   public List<Announcement> findAll() {
     final String SQL = "SELECT * FROM announcements";
     return namedParameterJdbcTemplate.query(SQL, new AnnouncementRowMapper());
+  }
+
+  @Override
+  public List<Announcement> findAllByDate(Long pageSize, Long offset) {
+    final String SQL =
+        "SELECT * FROM announcements ORDER BY id DESC LIMIT :pageSize OFFSET :offset";
+    SqlParameterSource sqlParameterSource =
+        new MapSqlParameterSource().addValue("pageSize", pageSize).addValue("offset", offset);
+    return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new AnnouncementRowMapper());
   }
 
   @Override
@@ -77,5 +87,11 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
             .addValue("announcement_id", announcementId)
             .addValue("user_id", userId);
     return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+  }
+
+  @Override
+  public Long findTotalCount() {
+    final String SQL = "SELECT COUNT(*) FROM announcements";
+    return namedParameterJdbcTemplate.queryForObject(SQL, new HashMap<>(), Long.class);
   }
 }

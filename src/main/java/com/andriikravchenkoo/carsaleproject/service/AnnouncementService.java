@@ -7,6 +7,8 @@ public interface AnnouncementService {
 
   List<Announcement> findAll();
 
+  List<Announcement> findAllForPage(Long pageSize, Long offset);
+
   Announcement findById(Long id);
 
   Announcement save(Announcement announcement);
@@ -14,4 +16,6 @@ public interface AnnouncementService {
   void delete(Announcement announcement);
 
   boolean checkOwner(Long announcementId, Long userId);
+
+  Long findTotalCount();
 }

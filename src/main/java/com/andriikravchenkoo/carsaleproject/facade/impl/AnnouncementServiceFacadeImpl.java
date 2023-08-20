@@ -88,13 +88,41 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
   }
 
   @Override
+  public List<AnnouncementPageDto> getAllAnnouncementsByDate(Long pageSize, Long offset) {
+    List<Announcement> announcements = announcementService.findAllForPage(pageSize, offset);
+
+    return announcements.stream()
+        .map(
+            announcement -> {
+              List<Image> images = imageService.findAllByAnnouncementId(announcement.getId());
+              Vehicle vehicle = vehicleService.findByAnnouncementId(announcement.getId());
+              Dealership dealership = dealershipService.findByVehicleId(vehicle.getId());
+
+              AnnouncementPageDto announcementPageDto = new AnnouncementPageDto();
+              announcementPageDto.setId(announcement.getId());
+              announcementPageDto.setPrice(announcement.getPrice());
+              announcementPageDto.setImages(images);
+              announcementPageDto.setVehicle(vehicle);
+              announcementPageDto.setDealership(dealership);
+
+              return announcementPageDto;
+            })
+        .toList();
+  }
+
+  @Override
   @Transactional
   public void deleteAnnouncement(Long announcementId) {
     Vehicle vehicle = vehicleService.findByAnnouncementId(announcementId);
+
     Announcement announcement = announcementService.findById(announcementId);
+
     favoritesService.deleteAllByAnnouncementId(announcementId);
+
     imageService.deleteAllAnnouncementImages(announcement);
+
     announcementService.delete(announcement);
+
     vehicleService.delete(vehicle);
   }
 
@@ -106,5 +134,10 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
   @Override
   public void removeAnnouncementFromFavorites(Long announcementId, Long userId) {
     favoritesService.delete(new Favorites(userId, announcementId));
+  }
+
+  @Override
+  public Long getTotalCountAnnouncements() {
+    return announcementService.findTotalCount();
   }
 }

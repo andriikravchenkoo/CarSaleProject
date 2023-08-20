@@ -14,9 +14,13 @@ public interface AnnouncementServiceFacade {
 
   AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User user) throws IOException;
 
+  List<AnnouncementPageDto> getAllAnnouncementsByDate(Long pageSize, Long offset);
+
   void deleteAnnouncement(Long announcementId);
 
   void addAnnouncementToFavorites(Long announcementId, Long userId);
 
   void removeAnnouncementFromFavorites(Long announcementId, Long currentUser);
+
+  Long getTotalCountAnnouncements();
 }

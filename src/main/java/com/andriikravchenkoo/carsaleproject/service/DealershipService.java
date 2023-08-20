@@ -11,6 +11,8 @@ public interface DealershipService {
 
   Dealership findByUserEmail(String email);
 
+  Dealership findByVehicleId(Long vehicleId);
+
   Dealership save(Dealership dealership);
 
   void delete(Dealership dealership);

@@ -8,6 +8,8 @@ public interface AnnouncementDao {
 
   List<Announcement> findAll();
 
+  List<Announcement> findAllByDate(Long pageSize, Long offset);
+
   Optional<Announcement> findById(Long id);
 
   Announcement save(Announcement announcement);
@@ -15,4 +17,6 @@ public interface AnnouncementDao {
   void delete(Announcement announcement);
 
   Long checkOwner(Long announcementId, Long userId);
+
+  Long findTotalCount();
 }

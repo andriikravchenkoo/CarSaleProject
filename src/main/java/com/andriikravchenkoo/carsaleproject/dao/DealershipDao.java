@@ -10,6 +10,8 @@ public interface DealershipDao {
 
   Optional<Dealership> findById(Long id);
 
+  Optional<Dealership> findByVehicleId(Long id);
+
   Optional<Dealership> findByUserEmail(String email);
 
   Dealership save(Dealership dealership);

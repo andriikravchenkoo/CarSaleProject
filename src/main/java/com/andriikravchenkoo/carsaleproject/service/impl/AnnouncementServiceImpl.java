@@ -20,6 +20,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
   }
 
   @Override
+  public List<Announcement> findAllForPage(Long pageSize, Long offset) {
+    return announcementDao.findAllByDate(pageSize, offset);
+  }
+
+  @Override
   public Announcement findById(Long id) {
     return announcementDao
         .findById(id)
@@ -40,5 +45,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
   @Override
   public boolean checkOwner(Long announcementId, Long userId) {
     return announcementDao.checkOwner(announcementId, userId) == 1;
+  }
+
+  @Override
+  public Long findTotalCount() {
+    return announcementDao.findTotalCount();
   }
 }

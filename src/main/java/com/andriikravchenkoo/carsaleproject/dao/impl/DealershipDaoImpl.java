@@ -45,6 +45,21 @@ public class DealershipDaoImpl implements DealershipDao {
   }
 
   @Override
+  public Optional<Dealership> findByVehicleId(Long vehicleId) {
+    final String SQL =
+        "SELECT d.* FROM dealerships d JOIN vehicles v ON d.id = v.dealership_id WHERE v.id = :vehicle_id";
+    SqlParameterSource sqlParameterSource = new MapSqlParameterSource("vehicle_id", vehicleId);
+    try {
+      return Optional.ofNullable(
+          namedParameterJdbcTemplate.queryForObject(
+              SQL, sqlParameterSource, new DealershipRowMapper()));
+    } catch (EmptyResultDataAccessException exception) {
+      log.error("Dealership by this vehicle id not found");
+    }
+    return Optional.empty();
+  }
+
+  @Override
   public Optional<Dealership> findByUserEmail(String email) {
     final String SQL =
         "SELECT d.id, d.name, d.region, d.address, d.phone_number, d.description FROM dealerships d JOIN users u on d.id = u.dealership_id WHERE u.email = :email";

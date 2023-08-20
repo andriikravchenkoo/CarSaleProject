@@ -67,6 +67,24 @@ public class AnnouncementController {
     return "announcement/announcement";
   }
 
+  @GetMapping("/page")
+  public String getAllAnnouncementsByDateForPages(@RequestParam Long pageId, Model model) {
+    long pageSize = 5;
+    long offset = (pageId - 1) * pageSize;
+
+    List<AnnouncementPageDto> announcements =
+        announcementServiceFacade.getAllAnnouncementsByDate(pageSize, offset);
+
+    long totalAnnouncements = announcementServiceFacade.getTotalCountAnnouncements();
+    long totalPages = (long) Math.ceil((double) totalAnnouncements / pageSize);
+
+    model.addAttribute("announcements", announcements);
+    model.addAttribute("pageId", pageId);
+    model.addAttribute("totalPages", totalPages);
+
+    return "announcement/announcements";
+  }
+
   @PostMapping("/add-to-favorites")
   public String postAddAnnouncementToFavorites(
       @RequestParam("announcementId") Long announcementId, @AuthenticationPrincipal User user) {
