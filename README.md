@@ -2,6 +2,7 @@
 
 ## Introduction
 An application built on the basis of MVC, which copies a car buying service. The user can view dealers and their advertisements for selling cars, and add them to favorites. The dealer can create car dealerships and add advertisements to the site.
+Project is currently under development.
 
 ## Features
 
