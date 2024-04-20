@@ -43,6 +43,8 @@ http://localhost:8080/car-sale/announcement/create - create announcement
 
 http://localhost:8080/car-sale/announcement/{id} - announcement by id
 
+http://localhost:8080/car-sale/announcement/page?pageId={id} - list of announcement
+
 ## Contributing
 
 1. Clone the project locally on your machine
