@@ -34,6 +34,8 @@ Customers - **email** - customer@gmail.com, **password** - customer
 
 http://localhost:8080/car-sale/announcement/page?pageId={id} - list of announcement
 
+http://localhost:8080/car-sale/announcement/page?pageId={id} - list of announcement
+
 ## Contributing
 
 1. Clone the project locally on your machine
