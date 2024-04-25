@@ -12,13 +12,13 @@
             background-color: transparent;
         }
         .image-container {
-            height: 200px; /* Задайте фиксированную высоту для всех изображений */
-            overflow: hidden; /* Обрезать изображение, если оно превышает высоту контейнера */
+            height: 200px;
+            overflow: hidden;
         }
 
         .image-container img {
-            width: 100%; /* Заполнить контейнер по ширине */
-            height: auto; /* Автоматическая высота, чтобы сохранить пропорции изображения */
+            width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -42,7 +42,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <p th:text="${announcement.getPrice()} + ' $'" class="card-text"></p>
-                                    <p th:text="${announcement.vehicle.getMileage()}" class="card-text"></p>
+                                    <p th:text="${announcement.vehicle.getMileage()} + ' km'" class="card-text"></p>
                                     <p th:text="${announcement.getDealership().getRegion()}" class="card-text"></p>
                                 </div>
                                 <div class="col-md-6">

@@ -4,11 +4,11 @@ import com.andriikravchenkoo.carsaleproject.model.entity.Favorites;
 
 public interface FavoritesDao {
 
-  Favorites save(Favorites favorites);
+    Favorites save(Favorites favorites);
 
-  void delete(Favorites favorites);
+    void delete(Favorites favorites);
 
-  void deleteAllByAnnouncementId(Long announcementId);
+    void deleteAllByAnnouncementId(Long announcementId);
 
-  Long checkExistence(Favorites favorites);
+    Long checkExistence(Favorites favorites);
 }

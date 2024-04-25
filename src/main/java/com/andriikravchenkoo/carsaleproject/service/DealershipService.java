@@ -1,19 +1,20 @@
 package com.andriikravchenkoo.carsaleproject.service;
 
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
+
 import java.util.List;
 
 public interface DealershipService {
 
-  List<Dealership> findAll();
+    List<Dealership> findAll();
 
-  Dealership findById(Long id);
+    Dealership findById(Long id);
 
-  Dealership findByUserEmail(String email);
+    Dealership findByUserEmail(String email);
 
-  Dealership findByVehicleId(Long vehicleId);
+    Dealership findByVehicleId(Long vehicleId);
 
-  Dealership save(Dealership dealership);
+    Dealership save(Dealership dealership);
 
-  void delete(Dealership dealership);
+    void delete(Dealership dealership);
 }

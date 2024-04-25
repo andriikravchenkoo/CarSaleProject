@@ -4,11 +4,11 @@ import com.andriikravchenkoo.carsaleproject.model.entity.Favorites;
 
 public interface FavoritesService {
 
-  Favorites save(Favorites favorites);
+    Favorites save(Favorites favorites);
 
-  void delete(Favorites favorites);
+    void delete(Favorites favorites);
 
-  void deleteAllByAnnouncementId(Long announcementId);
+    void deleteAllByAnnouncementId(Long announcementId);
 
-  boolean checkExistence(Favorites favorites);
+    boolean checkExistence(Favorites favorites);
 }

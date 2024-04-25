@@ -5,10 +5,9 @@ import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.*;
-import java.io.IOException;
-import java.util.List;
-import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,92 +15,100 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.validation.Valid;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/announcement")
 public class AnnouncementController {
 
-  private final AnnouncementServiceFacade announcementServiceFacade;
+    private final AnnouncementServiceFacade announcementServiceFacade;
 
-  @GetMapping("/create")
-  public String getCreateAnnouncementPage(Model model) {
-    model.addAttribute("vehicleAnnouncementDto", new VehicleAnnouncementDto());
-    model.addAttribute("bodyTypes", BodyType.values());
-    model.addAttribute("engineTypes", EngineType.values());
-    model.addAttribute("transmissions", Transmission.values());
-    model.addAttribute("colors", Color.values());
-    return "announcement/create";
-  }
-
-  @PostMapping("/create")
-  public String postCreateAnnouncementPage(
-      @Valid VehicleAnnouncementDto vehicleAnnouncementDto,
-      BindingResult bindingResult,
-      List<MultipartFile> files,
-      @AuthenticationPrincipal User user,
-      Model model) {
-    if (bindingResult.hasErrors()) {
-      model.addAttribute("bodyTypes", BodyType.values());
-      model.addAttribute("engineTypes", EngineType.values());
-      model.addAttribute("transmissions", Transmission.values());
-      model.addAttribute("colors", Color.values());
-      return "announcement/create";
+    @GetMapping("/create")
+    public String getCreateAnnouncementPage(Model model) {
+        model.addAttribute("vehicleAnnouncementDto", new VehicleAnnouncementDto());
+        model.addAttribute("bodyTypes", BodyType.values());
+        model.addAttribute("engineTypes", EngineType.values());
+        model.addAttribute("transmissions", Transmission.values());
+        model.addAttribute("colors", Color.values());
+        return "announcement/create";
     }
 
-    announcementServiceFacade.createAnnouncement(vehicleAnnouncementDto, files, user);
+    @PostMapping("/create")
+    public String postCreateAnnouncementPage(
+            @Valid VehicleAnnouncementDto vehicleAnnouncementDto,
+            BindingResult bindingResult,
+            List<MultipartFile> files,
+            @AuthenticationPrincipal User user,
+            Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("bodyTypes", BodyType.values());
+            model.addAttribute("engineTypes", EngineType.values());
+            model.addAttribute("transmissions", Transmission.values());
+            model.addAttribute("colors", Color.values());
+            return "announcement/create";
+        }
 
-    return "redirect:/vehicle/home";
-  }
+        announcementServiceFacade.createAnnouncement(vehicleAnnouncementDto, files, user);
 
-  @GetMapping("/{id}")
-  public String getAnnouncementPage(
-      @PathVariable Long id, @AuthenticationPrincipal User user, Model model) throws IOException {
-    AnnouncementPageDto announcement =
-        announcementServiceFacade.getAnnouncementWithImages(id, user);
-    model.addAttribute("images", announcement.getImages());
-    model.addAttribute("dealership", announcement.getUser().getDealership());
-    model.addAttribute("user", announcement.getUser());
-    model.addAttribute("image", announcement.getUser().getImage());
-    model.addAttribute("vehicle", announcement.getVehicle());
-    model.addAttribute("announcement", announcement);
-    return "announcement/announcement";
-  }
+        return "redirect:/vehicle/home";
+    }
 
-  @GetMapping("/page")
-  public String getAllAnnouncementsByDateForPages(@RequestParam Long pageId, Model model) {
-    long pageSize = 5;
-    long offset = (pageId - 1) * pageSize;
+    @GetMapping("/{id}")
+    public String getAnnouncementPage(
+            @PathVariable Long id, @AuthenticationPrincipal User user, Model model)
+            throws IOException {
+        AnnouncementPageDto announcement =
+                announcementServiceFacade.getAnnouncementWithImages(id, user);
+        model.addAttribute("images", announcement.getImages());
+        model.addAttribute("dealership", announcement.getUser().getDealership());
+        model.addAttribute("user", announcement.getUser());
+        model.addAttribute("image", announcement.getUser().getImage());
+        model.addAttribute("vehicle", announcement.getVehicle());
+        model.addAttribute("announcement", announcement);
+        return "announcement/announcement";
+    }
 
-    List<AnnouncementPageDto> announcements =
-        announcementServiceFacade.getAllAnnouncementsByDate(pageSize, offset);
+    @GetMapping("/page")
+    public String getAllAnnouncementsByDateForPages(@RequestParam Long pageId, Model model) {
+        long pageSize = 5;
+        long offset = (pageId - 1) * pageSize;
 
-    long totalAnnouncements = announcementServiceFacade.getTotalCountAnnouncements();
-    long totalPages = (long) Math.ceil((double) totalAnnouncements / pageSize);
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllAnnouncementsByDate(pageSize, offset);
 
-    model.addAttribute("announcements", announcements);
-    model.addAttribute("pageId", pageId);
-    model.addAttribute("totalPages", totalPages);
+        long totalAnnouncements = announcementServiceFacade.getTotalCountAnnouncements();
+        long totalPages = (long) Math.ceil((double) totalAnnouncements / pageSize);
 
-    return "announcement/announcements";
-  }
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
 
-  @PostMapping("/add-to-favorites")
-  public String postAddAnnouncementToFavorites(
-      @RequestParam("announcementId") Long announcementId, @AuthenticationPrincipal User user) {
-    announcementServiceFacade.addAnnouncementToFavorites(announcementId, user.getId());
-    return "redirect:/announcement/" + announcementId;
-  }
+        return "announcement/announcements";
+    }
 
-  @PostMapping("/remove-from-favorites")
-  public String postRemoveAnnouncementFromFavorites(
-      @RequestParam("announcementId") Long announcementId, @AuthenticationPrincipal User user) {
-    announcementServiceFacade.removeAnnouncementFromFavorites(announcementId, user.getId());
-    return "redirect:/announcement/" + announcementId;
-  }
+    @PostMapping("/add-to-favorites")
+    public String postAddAnnouncementToFavorites(
+            @RequestParam("announcementId") Long announcementId,
+            @AuthenticationPrincipal User user) {
+        announcementServiceFacade.addAnnouncementToFavorites(announcementId, user.getId());
+        return "redirect:/announcement/" + announcementId;
+    }
 
-  @PostMapping("/remove")
-  public String postRemoveAnnouncement(@RequestParam("announcementId") Long announcementId) {
-    announcementServiceFacade.deleteAnnouncement(announcementId);
-    return "redirect:/vehicle/home";
-  }
+    @PostMapping("/remove-from-favorites")
+    public String postRemoveAnnouncementFromFavorites(
+            @RequestParam("announcementId") Long announcementId,
+            @AuthenticationPrincipal User user) {
+        announcementServiceFacade.removeAnnouncementFromFavorites(announcementId, user.getId());
+        return "redirect:/announcement/" + announcementId;
+    }
+
+    @PostMapping("/remove")
+    public String postRemoveAnnouncement(@RequestParam("announcementId") Long announcementId) {
+        announcementServiceFacade.deleteAnnouncement(announcementId);
+        return "redirect:/vehicle/home";
+    }
 }
