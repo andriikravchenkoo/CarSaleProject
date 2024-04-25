@@ -3,13 +3,12 @@ package com.andriikravchenkoo.carsaleproject.dto;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
 
+import jakarta.validation.constraints.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor

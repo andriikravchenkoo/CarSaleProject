@@ -7,14 +7,14 @@ import com.andriikravchenkoo.carsaleproject.model.enums.Color;
 import com.andriikravchenkoo.carsaleproject.model.enums.EngineType;
 import com.andriikravchenkoo.carsaleproject.model.enums.Transmission;
 
+import jakarta.validation.constraints.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-
-import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor

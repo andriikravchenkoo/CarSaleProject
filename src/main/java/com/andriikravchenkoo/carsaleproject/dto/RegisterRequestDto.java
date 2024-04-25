@@ -3,16 +3,14 @@ package com.andriikravchenkoo.carsaleproject.dto;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.Role;
 
+import jakarta.validation.constraints.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor

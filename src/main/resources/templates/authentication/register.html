@@ -16,31 +16,31 @@
     <form method="post" th:object="${registerRequestDto}" enctype="multipart/form-data">
 
         <div th:fragment="createFragment">
-            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('register')}">
+            <div class="mb-3">
                 <label class="form-label" for="firstname">Firstname</label>
                 <input class="form-control" id="firstname" name="firstname" th:value="${registerRequestDto.firstname}"
                        type="firstname">
             </div>
 
-            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('register')}">
+            <div class="mb-3">
                 <label class="form-label" for="lastname">Lastname</label>
                 <input class="form-control" id="lastname" name="lastname" th:value="${registerRequestDto.lastname}"
                        type="lastname">
             </div>
 
-            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('register')}">
+            <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
                 <input class="form-control" id="email" name="email" placeholder="test@gmail.com" th:value="${registerRequestDto.email}"
                        type="email">
             </div>
 
-            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('register')}">
+            <div class="mb-3">
                 <label class="form-label" for="password">Password</label>
                 <input class="form-control" id="password" name="password" th:value="${registerRequestDto.password}"
                        type="password">
             </div>
 
-            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('register')}">
+            <div class="mb-3">
                 <label class="form-label" for="phoneNumber">Phone number</label>
                 <input class="form-control" id="phoneNumber" name="phoneNumber" placeholder="+380555555555"th:value="${registerRequestDto.phoneNumber}"
                        type="phoneNumber">
@@ -56,7 +56,7 @@
                 </select>
             </div>
 
-            <div class="mb-3" th:if="${#httpServletRequest.requestURI.endsWith('register')}">
+            <div class="mb-3">
                 <label class="form-label" for="file">Photo</label>
                 <input class="form-control" id="file" name="file" type="file" accept="image/png, image/jpeg">
             </div>
