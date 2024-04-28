@@ -18,26 +18,26 @@
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 
 <div class="vstack gap-2 col-md-4 mx-auto mt-5">
-    <form method="post" th:action="@{/announcement/create}" th:object="${vehicleAnnouncementDto}" enctype="multipart/form-data">
+    <form method="post" th:action="@{/announcement/create}" th:object="${vehicleAnnouncementCreateDto}" enctype="multipart/form-data">
 
         <h1 class="h1 mb-3 fw-normal">Create announcement</h1>
 
         <div th:fragment="createFragment">
             <div class="mb-3">
                 <label class="form-label" for="vin">VIN</label>
-                <input class="form-control" id="vin" name="vin" th:value="${vehicleAnnouncementDto.vin}"
+                <input class="form-control" id="vin" name="vin" th:value="${vehicleAnnouncementCreateDto.vin}"
                        type="vin">
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="brand">Brand</label>
-                <input class="form-control" id="brand" name="brand" th:value="${vehicleAnnouncementDto.brand}"
+                <input class="form-control" id="brand" name="brand" th:value="${vehicleAnnouncementCreateDto.brand}"
                        type="brand">
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="model">Model</label>
-                <input class="form-control" id="model" name="model" th:value="${vehicleAnnouncementDto.model}"
+                <input class="form-control" id="model" name="model" th:value="${vehicleAnnouncementCreateDto.model}"
                        type="model">
             </div>
 
@@ -45,7 +45,7 @@
                 <label class="form-label" for="bodyType">Body type</label>
                 <select class="form-select" id="bodyType" name="bodyType">
                     <option th:each="bodyType: ${bodyTypes}"
-                            th:selected="${vehicleAnnouncementDto.bodyType == bodyType}"
+                            th:selected="${vehicleAnnouncementCreateDto.bodyType == bodyType}"
                             th:text="${bodyType}"
                             th:value="${bodyType}">
                 </select>
@@ -53,7 +53,7 @@
 
             <div class="mb-3">
                 <label class="form-label" for="year">Year</label>
-                <input class="form-control" id="year" name="year" th:value="${vehicleAnnouncementDto.year}"
+                <input class="form-control" id="year" name="year" th:value="${vehicleAnnouncementCreateDto.year}"
                        type="number" pattern="\d+">
             </div>
 
@@ -61,7 +61,7 @@
                 <label class="form-label" for="engineType">Engine type</label>
                 <select class="form-select" id="engineType" name="engineType">
                     <option th:each="engineType: ${engineTypes}"
-                            th:selected="${vehicleAnnouncementDto.engineType == engineType}"
+                            th:selected="${vehicleAnnouncementCreateDto.engineType == engineType}"
                             th:text="${engineType}"
                             th:value="${engineType}">
                 </select>
@@ -69,13 +69,13 @@
 
             <div class="mb-3">
                 <label class="form-label" for="engineCapacity">Engine capacity</label>
-                <input class="form-control" id="engineCapacity" name="engineCapacity" th:value="${vehicleAnnouncementDto.engineCapacity}"
+                <input class="form-control" id="engineCapacity" name="engineCapacity" th:value="${vehicleAnnouncementCreateDto.engineCapacity}"
                        type="number" step="0.1">
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="horsepower">Horsepower</label>
-                <input class="form-control" id="horsepower" name="horsepower" th:value="${vehicleAnnouncementDto.horsepower}"
+                <input class="form-control" id="horsepower" name="horsepower" th:value="${vehicleAnnouncementCreateDto.horsepower}"
                        type="number" pattern="\d+">
             </div>
 
@@ -83,7 +83,7 @@
                 <label class="form-label" for="transmission">Transmission</label>
                 <select class="form-select" id="transmission" name="transmission">
                     <option th:each="transmission: ${transmissions}"
-                            th:selected="${vehicleAnnouncementDto.transmission == transmission}"
+                            th:selected="${vehicleAnnouncementCreateDto.transmission == transmission}"
                             th:text="${transmission}"
                             th:value="${transmission}">
                 </select>
@@ -91,7 +91,7 @@
 
             <div class="mb-3">
                 <label class="form-label" for="mileage">Mileage</label>
-                <input class="form-control" id="mileage" name="mileage" th:value="${vehicleAnnouncementDto.mileage}"
+                <input class="form-control" id="mileage" name="mileage" th:value="${vehicleAnnouncementCreateDto.mileage}"
                        type="number" pattern="\d+">
             </div>
 
@@ -99,7 +99,7 @@
                 <label class="form-label" for="color">Color</label>
                 <select class="form-select" id="color" name="color">
                     <option th:each="color: ${colors}"
-                            th:selected="${vehicleAnnouncementDto.color == color}"
+                            th:selected="${vehicleAnnouncementCreateDto.color == color}"
                             th:text="${color}"
                             th:value="${color}">
                 </select>
@@ -107,25 +107,25 @@
 
             <div class="mb-3">
                 <label class="form-label" for="licensePlate">License plate</label>
-                <input class="form-control" id="licensePlate" name="licensePlate" th:value="${vehicleAnnouncementDto.licensePlate}"
+                <input class="form-control" id="licensePlate" name="licensePlate" th:value="${vehicleAnnouncementCreateDto.licensePlate}"
                        type="licensePlate">
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="isUsed">Is used?</label>
-                <input class="form-check-input" id="isUsed" name="isUsed" type="checkbox" th:checked="${vehicleAnnouncementDto.isUsed}"/>
+                <input class="form-check-input" id="isUsed" name="isUsed" type="checkbox" th:checked="${vehicleAnnouncementCreateDto.isUsed}"/>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="price">Price in dollars</label>
-                <input class="form-control" id="price" name="price" th:value="${vehicleAnnouncementDto.price}"
+                <input class="form-control" id="price" name="price" th:value="${vehicleAnnouncementCreateDto.price}"
                        type="number" pattern="\d+">
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" id="description" name="description"
-                          th:text="${vehicleAnnouncementDto.description}"></textarea>
+                          th:text="${vehicleAnnouncementCreateDto.description}"></textarea>
             </div>
 
             <div class="mb-3">

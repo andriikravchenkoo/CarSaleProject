@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                         form ->
                                 form.loginPage("/authentication/login")
                                         .permitAll()
-                                        .defaultSuccessUrl("/vehicle/home"))
+                                        .defaultSuccessUrl("/announcement/page?pageId=1"))
                 .logout(
                         logout ->
                                 logout.logoutUrl("/authentication/logout")

@@ -1,6 +1,7 @@
 package com.andriikravchenkoo.carsaleproject.facade.impl;
 
-import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipCreateDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipPageDto;
 import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
@@ -32,10 +33,39 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
     private final VehicleService vehicleService;
 
     @Override
+    public List<DealershipPageDto> getAllDealershipsByDate(Long limitPerPage, Long offset) {
+        List<Dealership> dealerships = dealershipService.findAllByDateForPage(limitPerPage, offset);
+
+        return dealerships.stream()
+                .map(
+                        dealership -> {
+                            List<Image> images =
+                                    imageService.findAllByDealershipId(dealership.getId());
+                            Long countOfVehiclesInDealership =
+                                    vehicleService.findCountByDealershipId(dealership.getId());
+
+                            DealershipPageDto dealershipPageDto = new DealershipPageDto();
+                            dealershipPageDto.setId(dealership.getId());
+                            dealershipPageDto.setName(dealership.getName());
+                            dealershipPageDto.setRegion(dealership.getRegion());
+                            dealershipPageDto.setImages(images);
+                            dealershipPageDto.setCountVehicles(countOfVehiclesInDealership);
+
+                            return dealershipPageDto;
+                        })
+                .toList();
+    }
+
+    @Override
+    public Long getTotalCountDealerships() {
+        return dealershipService.findTotalCount();
+    }
+
+    @Override
     @Transactional
     public void createDealership(
-            DealershipDto dealershipDto, List<MultipartFile> files, User user) {
-        Dealership dealership = dealershipService.save(dealershipDto.toEntity());
+            DealershipCreateDto dealershipCreateDto, List<MultipartFile> files, User user) {
+        Dealership dealership = dealershipService.save(dealershipCreateDto.toEntity());
 
         List<Image> images = imageService.saveAll(files);
 
@@ -49,14 +79,10 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
     }
 
     @Override
-    public Dealership getDealershipWithImages(Long id) {
+    public DealershipPageDto getDealershipWithImages(Long id) {
         List<Image> images = imageService.findAllByDealershipId(id);
 
-        Dealership dealership = dealershipService.findById(id);
-
-        dealership.setImages(images);
-
-        return dealership;
+        return dealershipService.findById(id).toDto(images);
     }
 
     @Override

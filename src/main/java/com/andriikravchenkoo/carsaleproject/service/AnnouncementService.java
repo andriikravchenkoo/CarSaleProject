@@ -8,7 +8,7 @@ public interface AnnouncementService {
 
     List<Announcement> findAll();
 
-    List<Announcement> findAllForPage(Long pageSize, Long offset);
+    List<Announcement> findAllByDateForPage(Long limitPerPage, Long offset);
 
     Announcement findById(Long id);
 

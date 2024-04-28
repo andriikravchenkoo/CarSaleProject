@@ -1,8 +1,8 @@
 package com.andriikravchenkoo.carsaleproject.controller;
 
-import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipCreateDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipPageDto;
 import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
-import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
 
@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,16 +27,19 @@ public class DealershipController {
 
     private final DealershipServiceFacade dealershipServiceFacade;
 
+    @Value("${limit.per.page}")
+    private Long limitPerPage;
+
     @GetMapping("/create")
     public String getCreateDealershipPage(Model model) {
-        model.addAttribute("dealershipDto", new DealershipDto());
+        model.addAttribute("dealershipCreateDto", new DealershipCreateDto());
         model.addAttribute("regions", Region.values());
         return "dealership/create";
     }
 
     @PostMapping("/create")
     public String postCreateDealershipPage(
-            @Valid DealershipDto dealershipDto,
+            @Valid DealershipCreateDto dealershipCreateDto,
             BindingResult bindingResult,
             List<MultipartFile> files,
             @AuthenticationPrincipal User user,
@@ -45,17 +49,34 @@ public class DealershipController {
             return "dealership/create";
         }
 
-        dealershipServiceFacade.createDealership(dealershipDto, files, user);
+        dealershipServiceFacade.createDealership(dealershipCreateDto, files, user);
 
         return "redirect:/vehicle/home";
     }
 
     @GetMapping("/{id}")
     public String getDealershipPage(@PathVariable Long id, Model model) {
-        Dealership dealership = dealershipServiceFacade.getDealershipWithImages(id);
+        DealershipPageDto dealership = dealershipServiceFacade.getDealershipWithImages(id);
         model.addAttribute("images", dealership.getImages());
         model.addAttribute("dealership", dealership);
         return "dealership/dealership";
+    }
+
+    @GetMapping("/page")
+    public String getAllDealershipsByDateForPage(@RequestParam Long pageId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<DealershipPageDto> dealerships =
+                dealershipServiceFacade.getAllDealershipsByDate(limitPerPage, offset);
+
+        long totalCountDealerships = dealershipServiceFacade.getTotalCountDealerships();
+        long totalPages = (long) Math.ceil((double) totalCountDealerships / limitPerPage);
+
+        model.addAttribute("dealerships", dealerships);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+
+        return "dealership/dealerships";
     }
 
     @PostMapping("/add-seller")

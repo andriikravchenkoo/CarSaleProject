@@ -1,8 +1,8 @@
 package com.andriikravchenkoo.carsaleproject.controller.advice;
 
-import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipCreateDto;
 import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
-import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
+import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
 import com.andriikravchenkoo.carsaleproject.exception.DataAlreadyExistsException;
 import com.andriikravchenkoo.carsaleproject.exception.ImageCompressException;
 import com.andriikravchenkoo.carsaleproject.exception.ImageNotSavedException;
@@ -54,13 +54,13 @@ public class GlobalExceptionHandler {
         } else if (requestUrl.contains("/dealership/create")) {
             modelAndView = new ModelAndView("dealership/create");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
-            modelAndView.addObject("dealershipDto", new DealershipDto());
+            modelAndView.addObject("dealershipDto", new DealershipCreateDto());
             modelAndView.addObject("regions", Region.values());
             return modelAndView;
         } else if (requestUrl.contains("/announcement/create")) {
             modelAndView = new ModelAndView("announcement/create");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
-            modelAndView.addObject("vehicleAnnouncementDto", new VehicleAnnouncementDto());
+            modelAndView.addObject("vehicleAnnouncementDto", new VehicleAnnouncementCreateDto());
             modelAndView.addObject("bodyTypes", BodyType.values());
             modelAndView.addObject("engineTypes", EngineType.values());
             modelAndView.addObject("transmissions", Transmission.values());
@@ -89,13 +89,13 @@ public class GlobalExceptionHandler {
         } else if (requestUrl.contains("/dealership/create")) {
             modelAndView = new ModelAndView("dealership/create");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
-            modelAndView.addObject("dealershipDto", new DealershipDto());
+            modelAndView.addObject("dealershipDto", new DealershipCreateDto());
             modelAndView.addObject("regions", Region.values());
             return modelAndView;
         } else if (requestUrl.contains("/announcement/create")) {
             modelAndView = new ModelAndView("announcement/create");
             modelAndView.addObject(ERROR_MESSAGE, exception.getMessage());
-            modelAndView.addObject("vehicleAnnouncementDto", new VehicleAnnouncementDto());
+            modelAndView.addObject("vehicleAnnouncementDto", new VehicleAnnouncementCreateDto());
             modelAndView.addObject("bodyTypes", BodyType.values());
             modelAndView.addObject("engineTypes", EngineType.values());
             modelAndView.addObject("transmissions", Transmission.values());

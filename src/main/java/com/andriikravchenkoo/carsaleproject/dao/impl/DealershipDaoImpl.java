@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,17 @@ public class DealershipDaoImpl implements DealershipDao {
     public List<Dealership> findAll() {
         final String SQL = "SELECT * FROM dealerships";
         return namedParameterJdbcTemplate.query(SQL, new DealershipRowMapper());
+    }
+
+    @Override
+    public List<Dealership> findAllByDate(Long limitPerPage, Long offset) {
+        final String SQL =
+                "SELECT * FROM dealerships ORDER BY id DESC LIMIT :limitPerPage OFFSET :offset";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource()
+                        .addValue("limitPerPage", limitPerPage)
+                        .addValue("offset", offset);
+        return namedParameterJdbcTemplate.query(SQL, sqlParameterSource, new DealershipRowMapper());
     }
 
     @Override
@@ -75,6 +87,12 @@ public class DealershipDaoImpl implements DealershipDao {
             log.error("Dealership by this user email not found");
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Long findTotalCount() {
+        final String SQL = "SELECT COUNT(*) FROM dealerships";
+        return namedParameterJdbcTemplate.queryForObject(SQL, new HashMap<>(), Long.class);
     }
 
     @Override

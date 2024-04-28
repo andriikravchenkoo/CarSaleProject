@@ -25,6 +25,11 @@ public class DealershipServiceImpl implements DealershipService {
     }
 
     @Override
+    public List<Dealership> findAllByDateForPage(Long limitPerPage, Long offset) {
+        return dealershipDao.findAllByDate(limitPerPage, offset);
+    }
+
+    @Override
     public Dealership findById(Long id) {
         return dealershipDao
                 .findById(id)
@@ -56,6 +61,11 @@ public class DealershipServiceImpl implements DealershipService {
                                         "Dealership by vehicle id = "
                                                 + vehicleId
                                                 + " not found. You are not listed in any of the dealership"));
+    }
+
+    @Override
+    public Long findTotalCount() {
+        return dealershipDao.findTotalCount();
     }
 
     @Override

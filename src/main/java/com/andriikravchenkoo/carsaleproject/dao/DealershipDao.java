@@ -9,11 +9,15 @@ public interface DealershipDao {
 
     List<Dealership> findAll();
 
+    List<Dealership> findAllByDate(Long limitPerPage, Long offset);
+
     Optional<Dealership> findById(Long id);
 
     Optional<Dealership> findByVehicleId(Long id);
 
     Optional<Dealership> findByUserEmail(String email);
+
+    Long findTotalCount();
 
     Dealership save(Dealership dealership);
 

@@ -20,7 +20,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VehicleAnnouncementDto {
+public class VehicleAnnouncementCreateDto {
 
     @Pattern(regexp = "\\b[(A-H|J-N|P|R-Z|0-9)]{17}\\b", message = "VIN not valid")
     private String vin;

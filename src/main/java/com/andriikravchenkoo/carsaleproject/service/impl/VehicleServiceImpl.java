@@ -50,6 +50,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public Long findCountByDealershipId(Long dealershipId) {
+        return vehicleDao.findCountByDealershipId(dealershipId);
+    }
+
+    @Override
     public Vehicle save(Vehicle vehicle) {
         try {
             return vehicleDao.save(vehicle);

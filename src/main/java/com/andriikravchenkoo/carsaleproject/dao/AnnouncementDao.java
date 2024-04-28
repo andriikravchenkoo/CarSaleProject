@@ -9,7 +9,7 @@ public interface AnnouncementDao {
 
     List<Announcement> findAll();
 
-    List<Announcement> findAllByDate(Long pageSize, Long offset);
+    List<Announcement> findAllByDate(Long limitPerPage, Long offset);
 
     Optional<Announcement> findById(Long id);
 

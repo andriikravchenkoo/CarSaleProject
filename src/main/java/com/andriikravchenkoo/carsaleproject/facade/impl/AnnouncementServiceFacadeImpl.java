@@ -1,7 +1,7 @@
 package com.andriikravchenkoo.carsaleproject.facade.impl;
 
 import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
-import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
+import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.*;
 import com.andriikravchenkoo.carsaleproject.service.*;
@@ -34,8 +34,10 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     @Override
     @Transactional
     public void createAnnouncement(
-            VehicleAnnouncementDto vehicleAnnouncementDto, List<MultipartFile> files, User user) {
-        Vehicle vehicle = vehicleAnnouncementDto.toVehicleEntity();
+            VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
+            List<MultipartFile> files,
+            User user) {
+        Vehicle vehicle = vehicleAnnouncementCreateDto.toVehicleEntity();
 
         Dealership dealership = dealershipService.findByUserEmail(user.getEmail());
 
@@ -43,7 +45,7 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
         List<Image> images = imageService.saveAll(files);
 
-        Announcement announcement = vehicleAnnouncementDto.toAnnouncementEntity();
+        Announcement announcement = vehicleAnnouncementCreateDto.toAnnouncementEntity();
 
         announcement.setImages(images);
 
@@ -91,8 +93,9 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     }
 
     @Override
-    public List<AnnouncementPageDto> getAllAnnouncementsByDate(Long pageSize, Long offset) {
-        List<Announcement> announcements = announcementService.findAllForPage(pageSize, offset);
+    public List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset) {
+        List<Announcement> announcements =
+                announcementService.findAllByDateForPage(limitPerPage, offset);
 
         return announcements.stream()
                 .map(

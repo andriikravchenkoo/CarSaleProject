@@ -23,8 +23,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<Announcement> findAllForPage(Long pageSize, Long offset) {
-        return announcementDao.findAllByDate(pageSize, offset);
+    public List<Announcement> findAllByDateForPage(Long limitPerPage, Long offset) {
+        return announcementDao.findAllByDate(limitPerPage, offset);
     }
 
     @Override

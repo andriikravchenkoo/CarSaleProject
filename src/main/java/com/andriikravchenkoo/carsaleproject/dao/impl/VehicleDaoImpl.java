@@ -72,6 +72,14 @@ public class VehicleDaoImpl implements VehicleDao {
     }
 
     @Override
+    public Long findCountByDealershipId(Long dealershipId) {
+        final String SQL = "SELECT COUNT(*)FROM vehicles WHERE dealership_id = :dealershipId";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource("dealershipId", dealershipId);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+    }
+
+    @Override
     public Vehicle save(Vehicle vehicle) {
         final String SQL =
                 "INSERT INTO vehicles (vin, brand, model, body_type, year, engine_type, engine_capacity, horsepower, transmission, mileage, color, license_plate, is_used, dealership_id) VALUES (:vin, :brand, :model, :body_type, :year, :engine_type, :engine_capacity, :horsepower, :transmission, :mileage, :color, :license_plate, :is_used, :dealership_id)";

@@ -1,5 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
+import com.andriikravchenkoo.carsaleproject.dto.DealershipPageDto;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
 
 import lombok.AllArgsConstructor;
@@ -40,5 +41,17 @@ public class Dealership {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.description = description;
+    }
+
+    public DealershipPageDto toDto(List<Image> images) {
+        return DealershipPageDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .region(this.region)
+                .address(this.address)
+                .phoneNumber(this.phoneNumber)
+                .description(this.description)
+                .images(images)
+                .build();
     }
 }

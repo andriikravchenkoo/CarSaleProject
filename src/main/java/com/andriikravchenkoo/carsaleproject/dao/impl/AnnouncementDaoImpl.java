@@ -34,12 +34,12 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     }
 
     @Override
-    public List<Announcement> findAllByDate(Long pageSize, Long offset) {
+    public List<Announcement> findAllByDate(Long limitPerPage, Long offset) {
         final String SQL =
-                "SELECT * FROM announcements ORDER BY id DESC LIMIT :pageSize OFFSET :offset";
+                "SELECT * FROM announcements ORDER BY id DESC LIMIT :limitPerPage OFFSET :offset";
         SqlParameterSource sqlParameterSource =
                 new MapSqlParameterSource()
-                        .addValue("pageSize", pageSize)
+                        .addValue("limitPerPage", limitPerPage)
                         .addValue("offset", offset);
         return namedParameterJdbcTemplate.query(
                 SQL, sqlParameterSource, new AnnouncementRowMapper());

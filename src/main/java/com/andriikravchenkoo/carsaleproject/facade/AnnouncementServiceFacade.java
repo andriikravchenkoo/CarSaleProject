@@ -1,7 +1,7 @@
 package com.andriikravchenkoo.carsaleproject.facade;
 
 import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
-import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
+import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -12,12 +12,14 @@ import java.util.List;
 public interface AnnouncementServiceFacade {
 
     void createAnnouncement(
-            VehicleAnnouncementDto vehicleAnnouncementDto, List<MultipartFile> files, User user);
+            VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
+            List<MultipartFile> files,
+            User user);
 
     AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User user)
             throws IOException;
 
-    List<AnnouncementPageDto> getAllAnnouncementsByDate(Long pageSize, Long offset);
+    List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset);
 
     void deleteAnnouncement(Long announcementId);
 

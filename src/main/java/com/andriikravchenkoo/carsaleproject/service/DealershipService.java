@@ -8,11 +8,15 @@ public interface DealershipService {
 
     List<Dealership> findAll();
 
+    List<Dealership> findAllByDateForPage(Long limitPerPage, Long offset);
+
     Dealership findById(Long id);
 
     Dealership findByUserEmail(String email);
 
     Dealership findByVehicleId(Long vehicleId);
+
+    Long findTotalCount();
 
     Dealership save(Dealership dealership);
 

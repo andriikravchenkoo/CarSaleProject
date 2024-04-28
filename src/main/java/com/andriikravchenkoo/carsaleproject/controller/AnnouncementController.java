@@ -1,7 +1,7 @@
 package com.andriikravchenkoo.carsaleproject.controller;
 
 import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
-import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementDto;
+import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.*;
@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +28,12 @@ public class AnnouncementController {
 
     private final AnnouncementServiceFacade announcementServiceFacade;
 
+    @Value("${limit.per.page}")
+    private Long limitPerPage;
+
     @GetMapping("/create")
     public String getCreateAnnouncementPage(Model model) {
-        model.addAttribute("vehicleAnnouncementDto", new VehicleAnnouncementDto());
+        model.addAttribute("vehicleAnnouncementCreateDto", new VehicleAnnouncementCreateDto());
         model.addAttribute("bodyTypes", BodyType.values());
         model.addAttribute("engineTypes", EngineType.values());
         model.addAttribute("transmissions", Transmission.values());
@@ -39,7 +43,7 @@ public class AnnouncementController {
 
     @PostMapping("/create")
     public String postCreateAnnouncementPage(
-            @Valid VehicleAnnouncementDto vehicleAnnouncementDto,
+            @Valid VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
             BindingResult bindingResult,
             List<MultipartFile> files,
             @AuthenticationPrincipal User user,
@@ -52,7 +56,7 @@ public class AnnouncementController {
             return "announcement/create";
         }
 
-        announcementServiceFacade.createAnnouncement(vehicleAnnouncementDto, files, user);
+        announcementServiceFacade.createAnnouncement(vehicleAnnouncementCreateDto, files, user);
 
         return "redirect:/vehicle/home";
     }
@@ -73,15 +77,14 @@ public class AnnouncementController {
     }
 
     @GetMapping("/page")
-    public String getAllAnnouncementsByDateForPages(@RequestParam Long pageId, Model model) {
-        long pageSize = 5;
-        long offset = (pageId - 1) * pageSize;
+    public String getAllAnnouncementsByDateForPage(@RequestParam Long pageId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
 
         List<AnnouncementPageDto> announcements =
-                announcementServiceFacade.getAllAnnouncementsByDate(pageSize, offset);
+                announcementServiceFacade.getAllAnnouncementsByDate(limitPerPage, offset);
 
-        long totalAnnouncements = announcementServiceFacade.getTotalCountAnnouncements();
-        long totalPages = (long) Math.ceil((double) totalAnnouncements / pageSize);
+        long totalCountAnnouncements = announcementServiceFacade.getTotalCountAnnouncements();
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
         model.addAttribute("pageId", pageId);
