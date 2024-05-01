@@ -16,7 +16,7 @@ public interface AnnouncementServiceFacade {
             List<MultipartFile> files,
             User user);
 
-    AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User user)
+    AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User authenticationUser)
             throws IOException;
 
     List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset);

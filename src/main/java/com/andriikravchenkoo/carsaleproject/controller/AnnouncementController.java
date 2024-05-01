@@ -63,10 +63,10 @@ public class AnnouncementController {
 
     @GetMapping("/{id}")
     public String getAnnouncementPage(
-            @PathVariable Long id, @AuthenticationPrincipal User user, Model model)
+            @PathVariable Long id, @AuthenticationPrincipal User authenticationUser, Model model)
             throws IOException {
         AnnouncementPageDto announcement =
-                announcementServiceFacade.getAnnouncementWithImages(id, user);
+                announcementServiceFacade.getAnnouncementWithImages(id, authenticationUser);
         model.addAttribute("images", announcement.getImages());
         model.addAttribute("dealership", announcement.getUser().getDealership());
         model.addAttribute("user", announcement.getUser());

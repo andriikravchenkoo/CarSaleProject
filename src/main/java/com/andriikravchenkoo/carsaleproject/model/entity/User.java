@@ -1,5 +1,6 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
+import com.andriikravchenkoo.carsaleproject.dto.UserProfilePageDto;
 import com.andriikravchenkoo.carsaleproject.model.enums.Role;
 
 import lombok.AllArgsConstructor;
@@ -83,5 +84,17 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UserProfilePageDto toDto() {
+        return UserProfilePageDto.builder()
+                .id(this.id)
+                .firstname(this.firstname)
+                .lastname(this.lastname)
+                .email(this.email)
+                .phoneNumber(this.phoneNumber)
+                .role(this.role)
+                .image(this.image)
+                .build();
     }
 }

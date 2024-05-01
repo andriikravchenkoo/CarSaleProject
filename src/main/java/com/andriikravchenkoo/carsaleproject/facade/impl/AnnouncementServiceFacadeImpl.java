@@ -61,8 +61,8 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     }
 
     @Override
-    public AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User currentUser)
-            throws IOException {
+    public AnnouncementPageDto getAnnouncementWithImages(
+            Long announcementId, User authenticationUser) throws IOException {
         List<Image> images = imageService.findAllByAnnouncementId(announcementId);
 
         Announcement announcement = announcementService.findById(announcementId);
@@ -85,11 +85,11 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
         announcement.setVehicle(vehicle);
 
-        Favorites favorites = new Favorites(currentUser.getId(), announcementId);
+        Favorites favorites = new Favorites(authenticationUser.getId(), announcementId);
 
         return announcement.toDto(
                 favoritesService.checkExistence(favorites),
-                announcementService.checkOwner(announcementId, currentUser.getId()));
+                announcementService.checkOwner(announcementId, authenticationUser.getId()));
     }
 
     @Override
