@@ -27,19 +27,4 @@ public class UserProfilePageDto {
     private Role role;
 
     private Image image;
-
-    public UserProfilePageDto(
-            String firstname,
-            String lastname,
-            String email,
-            String phoneNumber,
-            Role role,
-            Image image) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.image = image;
-    }
 }

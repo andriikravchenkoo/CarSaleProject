@@ -33,18 +33,10 @@ public class DealershipPageDto {
     private Long countVehicles;
 
     public DealershipPageDto(
-            String name,
-            Region region,
-            String address,
-            String phoneNumber,
-            String description,
-            List<Image> images,
-            Long countVehicles) {
+            Long id, String name, Region region, List<Image> images, Long countVehicles) {
+        this.id = id;
         this.name = name;
         this.region = region;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.description = description;
         this.images = images;
         this.countVehicles = countVehicles;
     }

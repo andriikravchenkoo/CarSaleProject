@@ -11,4 +11,6 @@ public interface FavoritesDao {
     void deleteAllByAnnouncementId(Long announcementId);
 
     Long checkExistence(Favorites favorites);
+
+    Long findTotalCountByUserId(Long userId);
 }

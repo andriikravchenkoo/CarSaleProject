@@ -24,12 +24,12 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto ms-4 mb-2 justify-content-center mb-md-0">
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
-                        <i class="bi bi-car-front"></i> Used cars</a>
+                    <li><a th:href="@{/announcement/used-vehicles/page?pageId=1}" class="nav-link px-2 text-white">
+                        <i class="bi bi-car-front"></i> Used vehicles</a>
                     </li>
 
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
-                        <i class="bi bi-car-front-fill"></i> New cars</a>
+                    <li><a th:href="@{/announcement/new-vehicles/page?pageId=1}" class="nav-link px-2 text-white">
+                        <i class="bi bi-car-front-fill"></i> New vehicles</a>
                     </li>
 
                     <li><a th:href="@{/dealership/page?pageId=1}" class="nav-link px-2 text-white">
@@ -49,11 +49,11 @@
                     </li>
 
                     <li sec:authorize="hasAuthority('SELLER')" class="text-end">
-                        <a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
+                        <a th:href="@{/announcement/my/page?pageId=1}" class="nav-link px-2 text-white">
                             <i class="bi bi-badge-ad-fill"></i> My ads</a>
                     </li>
 
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
+                    <li><a th:href="@{/announcement/my-favorites/page?pageId=1}" class="nav-link px-2 text-white">
                         <i class="bi bi-heart"></i> Favorites</a>
                     </li>
 

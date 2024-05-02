@@ -34,26 +34,22 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
     @Override
     public List<DealershipPageDto> getAllDealershipsByDate(Long limitPerPage, Long offset) {
-        List<Dealership> dealerships = dealershipService.findAllByDateForPage(limitPerPage, offset);
-
-        return dealerships.stream()
-                .map(
-                        dealership -> {
-                            List<Image> images =
-                                    imageService.findAllByDealershipId(dealership.getId());
-                            Long countOfVehiclesInDealership =
-                                    vehicleService.findCountByDealershipId(dealership.getId());
-
-                            DealershipPageDto dealershipPageDto = new DealershipPageDto();
-                            dealershipPageDto.setId(dealership.getId());
-                            dealershipPageDto.setName(dealership.getName());
-                            dealershipPageDto.setRegion(dealership.getRegion());
-                            dealershipPageDto.setImages(images);
-                            dealershipPageDto.setCountVehicles(countOfVehiclesInDealership);
-
-                            return dealershipPageDto;
-                        })
+        return dealershipService.findAllByDateForPage(limitPerPage, offset).stream()
+                .map(this::mapToDealershipPageDto)
                 .toList();
+    }
+
+    private DealershipPageDto mapToDealershipPageDto(Dealership dealership) {
+        List<Image> images = imageService.findAllByDealershipId(dealership.getId());
+        Long countOfVehiclesInDealership =
+                vehicleService.findCountByDealershipId(dealership.getId());
+
+        return new DealershipPageDto(
+                dealership.getId(),
+                dealership.getName(),
+                dealership.getRegion(),
+                images,
+                countOfVehiclesInDealership);
     }
 
     @Override

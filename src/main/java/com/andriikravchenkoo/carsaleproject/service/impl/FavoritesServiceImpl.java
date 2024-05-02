@@ -34,4 +34,9 @@ public class FavoritesServiceImpl implements FavoritesService {
         Long result = favoritesDao.checkExistence(favorites);
         return result != null && result > 0;
     }
+
+    @Override
+    public Long findTotalCountByUserId(Long userId) {
+        return favoritesDao.findTotalCountByUserId(userId);
+    }
 }

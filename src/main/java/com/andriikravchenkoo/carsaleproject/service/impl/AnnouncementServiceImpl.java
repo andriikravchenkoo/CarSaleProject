@@ -28,6 +28,23 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    public List<Announcement> findAllByUserId(Long limitPerPage, Long offset, Long userId) {
+        return announcementDao.findAllByUserId(limitPerPage, offset, userId);
+    }
+
+    @Override
+    public List<Announcement> findAllFavoritesByUserId(
+            Long limitPerPage, Long offset, Long userId) {
+        return announcementDao.findAllFavoritesByUserId(limitPerPage, offset, userId);
+    }
+
+    @Override
+    public List<Announcement> findAllByVehicleUsage(
+            Long limitPerPage, Long offset, Boolean isUsed) {
+        return announcementDao.findAllByVehicleUsage(limitPerPage, offset, isUsed);
+    }
+
+    @Override
     public Announcement findById(Long id) {
         return announcementDao
                 .findById(id)
@@ -55,5 +72,15 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public Long findTotalCount() {
         return announcementDao.findTotalCount();
+    }
+
+    @Override
+    public Long findTotalCountBuUserId(Long userId) {
+        return announcementDao.findTotalCountByUserId(userId);
+    }
+
+    @Override
+    public Long findTotalCountByVehicleUsage(Boolean isUsed) {
+        return announcementDao.findTotalCountByVehicleUsage(isUsed);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface AnnouncementServiceFacade {
 
-    void createAnnouncement(
+    Long createAnnouncement(
             VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
             List<MultipartFile> files,
             User user);
@@ -21,6 +21,14 @@ public interface AnnouncementServiceFacade {
 
     List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset);
 
+    List<AnnouncementPageDto> getAllAnnouncementByUser(Long limitPerPage, Long offset, User user);
+
+    List<AnnouncementPageDto> getAllFavoritesAnnouncementsByUser(
+            Long limitPerPage, Long offset, User user);
+
+    List<AnnouncementPageDto> getAllAnnouncementByVehicleUsage(
+            Long limitPerPage, Long offset, Boolean isUsed);
+
     void deleteAnnouncement(Long announcementId);
 
     void addAnnouncementToFavorites(Long announcementId, Long userId);
@@ -28,4 +36,10 @@ public interface AnnouncementServiceFacade {
     void removeAnnouncementFromFavorites(Long announcementId, Long currentUser);
 
     Long getTotalCountAnnouncements();
+
+    Long getTotalCountAnnouncementByUser(Long userId);
+
+    Long getTotalCountFavoritesAnnouncementByUser(Long userId);
+
+    Long getTotalCountAnnouncementByVehicleUsage(Boolean isUsed);
 }

@@ -62,4 +62,12 @@ public class FavoritesDaoImpl implements FavoritesDao {
                         .addValue("announcement_id", favorites.getAnnouncementId());
         return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
     }
+
+    @Override
+    public Long findTotalCountByUserId(Long userId) {
+        final String SQL = "SELECT COUNT(*) FROM favorites WHERE user_id = :user_id";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource().addValue("user_id", userId);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+    }
 }

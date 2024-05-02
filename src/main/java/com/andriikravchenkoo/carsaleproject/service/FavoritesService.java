@@ -11,4 +11,6 @@ public interface FavoritesService {
     void deleteAllByAnnouncementId(Long announcementId);
 
     boolean checkExistence(Favorites favorites);
+
+    Long findTotalCountByUserId(Long userId);
 }

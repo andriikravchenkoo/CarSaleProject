@@ -56,9 +56,11 @@ public class AnnouncementController {
             return "announcement/create";
         }
 
-        announcementServiceFacade.createAnnouncement(vehicleAnnouncementCreateDto, files, user);
+        Long createdAnnouncementId =
+                announcementServiceFacade.createAnnouncement(
+                        vehicleAnnouncementCreateDto, files, user);
 
-        return "redirect:/vehicle/home";
+        return "redirect:/announcement/" + createdAnnouncementId;
     }
 
     @GetMapping("/{id}")
@@ -91,6 +93,92 @@ public class AnnouncementController {
         model.addAttribute("totalPages", totalPages);
 
         return "announcement/announcements";
+    }
+
+    @GetMapping("/my/page")
+    public String getAllAnnouncementsByUserForPage(
+            @RequestParam Long pageId,
+            @AuthenticationPrincipal User authenticationUser,
+            Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllAnnouncementByUser(
+                        limitPerPage, offset, authenticationUser);
+
+        long totalCountAnnouncements =
+                announcementServiceFacade.getTotalCountAnnouncementByUser(
+                        authenticationUser.getId());
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasAnnouncements", totalCountAnnouncements > 0);
+
+        return "announcement/user_announcements";
+    }
+
+    @GetMapping("/my-favorites/page")
+    public String getAllFavoritesAnnouncementsByUserForPage(
+            @RequestParam Long pageId,
+            @AuthenticationPrincipal User authenticationUser,
+            Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllFavoritesAnnouncementsByUser(
+                        limitPerPage, offset, authenticationUser);
+
+        long totalCountAnnouncements =
+                announcementServiceFacade.getTotalCountFavoritesAnnouncementByUser(
+                        authenticationUser.getId());
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasFavorites", totalCountAnnouncements > 0);
+
+        return "announcement/user_favorites_announcements";
+    }
+
+    @GetMapping("/new-vehicles/page")
+    public String getAllAnnouncementByNewVehicleForPage(@RequestParam Long pageId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllAnnouncementByVehicleUsage(
+                        limitPerPage, offset, false);
+
+        long totalCountAnnouncements =
+                announcementServiceFacade.getTotalCountAnnouncementByVehicleUsage(false);
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+
+        return "announcement/new_vehicle_announcements";
+    }
+
+    @GetMapping("/used-vehicles/page")
+    public String getAllAnnouncementByUsedVehicleForPage(@RequestParam Long pageId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllAnnouncementByVehicleUsage(
+                        limitPerPage, offset, true);
+
+        long totalCountAnnouncements =
+                announcementServiceFacade.getTotalCountAnnouncementByVehicleUsage(true);
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+
+        return "announcement/used_vehicle_announcements";
     }
 
     @PostMapping("/add-to-favorites")

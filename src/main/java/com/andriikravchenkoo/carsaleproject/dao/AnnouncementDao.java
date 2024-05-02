@@ -11,6 +11,12 @@ public interface AnnouncementDao {
 
     List<Announcement> findAllByDate(Long limitPerPage, Long offset);
 
+    List<Announcement> findAllByUserId(Long limitPerPage, Long offset, Long userId);
+
+    List<Announcement> findAllFavoritesByUserId(Long limitPerPage, Long offset, Long userId);
+
+    List<Announcement> findAllByVehicleUsage(Long limitPerPage, Long offset, Boolean isUsed);
+
     Optional<Announcement> findById(Long id);
 
     Announcement save(Announcement announcement);
@@ -20,4 +26,8 @@ public interface AnnouncementDao {
     Long checkOwner(Long announcementId, Long userId);
 
     Long findTotalCount();
+
+    Long findTotalCountByUserId(Long userId);
+
+    Long findTotalCountByVehicleUsage(Boolean isUsed);
 }

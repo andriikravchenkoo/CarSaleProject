@@ -10,6 +10,12 @@ public interface AnnouncementService {
 
     List<Announcement> findAllByDateForPage(Long limitPerPage, Long offset);
 
+    List<Announcement> findAllByUserId(Long limitPerPage, Long offset, Long userId);
+
+    List<Announcement> findAllFavoritesByUserId(Long limitPerPage, Long offset, Long userId);
+
+    List<Announcement> findAllByVehicleUsage(Long limitPerPage, Long offset, Boolean isUsed);
+
     Announcement findById(Long id);
 
     Announcement save(Announcement announcement);
@@ -19,4 +25,8 @@ public interface AnnouncementService {
     boolean checkOwner(Long announcementId, Long userId);
 
     Long findTotalCount();
+
+    Long findTotalCountBuUserId(Long userId);
+
+    Long findTotalCountByVehicleUsage(Boolean isUsed);
 }

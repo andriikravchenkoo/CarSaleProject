@@ -39,25 +39,11 @@ public class AnnouncementPageDto {
     private Boolean isOwner;
 
     public AnnouncementPageDto(
-            Integer price,
-            Date created,
-            Boolean isClosed,
-            String description,
-            List<Image> images,
-            User user,
-            Vehicle vehicle,
-            Dealership dealership,
-            Boolean isFavorite,
-            Boolean isOwner) {
+            Long id, Integer price, List<Image> images, Vehicle vehicle, Dealership dealership) {
+        this.id = id;
         this.price = price;
-        this.created = created;
-        this.isClosed = isClosed;
-        this.description = description;
         this.images = images;
-        this.user = user;
         this.vehicle = vehicle;
         this.dealership = dealership;
-        this.isFavorite = isFavorite;
-        this.isOwner = isOwner;
     }
 }

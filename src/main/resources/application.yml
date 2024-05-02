@@ -15,4 +15,4 @@ server:
 
 limit:
   per:
-    page: 5
+    page: 6

@@ -33,7 +33,7 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
     @Override
     @Transactional
-    public void createAnnouncement(
+    public Long createAnnouncement(
             VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
             List<MultipartFile> files,
             User user) {
@@ -58,6 +58,8 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
         Announcement savedAnnouncement = announcementService.save(announcement);
 
         imageService.saveAllAnnouncementImages(savedAnnouncement);
+
+        return savedAnnouncement.getId();
     }
 
     @Override
@@ -94,29 +96,44 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
     @Override
     public List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset) {
-        List<Announcement> announcements =
-                announcementService.findAllByDateForPage(limitPerPage, offset);
-
-        return announcements.stream()
-                .map(
-                        announcement -> {
-                            List<Image> images =
-                                    imageService.findAllByAnnouncementId(announcement.getId());
-                            Vehicle vehicle =
-                                    vehicleService.findByAnnouncementId(announcement.getId());
-                            Dealership dealership =
-                                    dealershipService.findByVehicleId(vehicle.getId());
-
-                            AnnouncementPageDto announcementPageDto = new AnnouncementPageDto();
-                            announcementPageDto.setId(announcement.getId());
-                            announcementPageDto.setPrice(announcement.getPrice());
-                            announcementPageDto.setImages(images);
-                            announcementPageDto.setVehicle(vehicle);
-                            announcementPageDto.setDealership(dealership);
-
-                            return announcementPageDto;
-                        })
+        return announcementService.findAllByDateForPage(limitPerPage, offset).stream()
+                .map(this::mapToAnnouncementPageDto)
                 .toList();
+    }
+
+    @Override
+    public List<AnnouncementPageDto> getAllAnnouncementByUser(
+            Long limitPerPage, Long offset, User user) {
+        return announcementService.findAllByUserId(limitPerPage, offset, user.getId()).stream()
+                .map(this::mapToAnnouncementPageDto)
+                .toList();
+    }
+
+    @Override
+    public List<AnnouncementPageDto> getAllFavoritesAnnouncementsByUser(
+            Long limitPerPage, Long offset, User user) {
+        return announcementService
+                .findAllFavoritesByUserId(limitPerPage, offset, user.getId())
+                .stream()
+                .map(this::mapToAnnouncementPageDto)
+                .toList();
+    }
+
+    @Override
+    public List<AnnouncementPageDto> getAllAnnouncementByVehicleUsage(
+            Long limitPerPage, Long offset, Boolean isUsed) {
+        return announcementService.findAllByVehicleUsage(limitPerPage, offset, isUsed).stream()
+                .map(this::mapToAnnouncementPageDto)
+                .toList();
+    }
+
+    private AnnouncementPageDto mapToAnnouncementPageDto(Announcement announcement) {
+        List<Image> images = imageService.findAllByAnnouncementId(announcement.getId());
+        Vehicle vehicle = vehicleService.findByAnnouncementId(announcement.getId());
+        Dealership dealership = dealershipService.findByVehicleId(vehicle.getId());
+
+        return new AnnouncementPageDto(
+                announcement.getId(), announcement.getPrice(), images, vehicle, dealership);
     }
 
     @Override
@@ -148,5 +165,20 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     @Override
     public Long getTotalCountAnnouncements() {
         return announcementService.findTotalCount();
+    }
+
+    @Override
+    public Long getTotalCountAnnouncementByUser(Long userId) {
+        return announcementService.findTotalCountBuUserId(userId);
+    }
+
+    @Override
+    public Long getTotalCountFavoritesAnnouncementByUser(Long userId) {
+        return favoritesService.findTotalCountByUserId(userId);
+    }
+
+    @Override
+    public Long getTotalCountAnnouncementByVehicleUsage(Boolean isUsed) {
+        return announcementService.findTotalCountByVehicleUsage(isUsed);
     }
 }

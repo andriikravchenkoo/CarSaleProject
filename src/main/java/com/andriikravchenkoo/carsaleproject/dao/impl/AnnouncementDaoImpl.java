@@ -46,6 +46,47 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     }
 
     @Override
+    public List<Announcement> findAllByUserId(Long limitPerPage, Long offset, Long userId) {
+        final String SQL =
+                "SELECT * FROM announcements WHERE user_id = :user_id ORDER BY id DESC LIMIT :limitPerPage OFFSET :offset";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource()
+                        .addValue("limitPerPage", limitPerPage)
+                        .addValue("offset", offset)
+                        .addValue("user_id", userId);
+        return namedParameterJdbcTemplate.query(
+                SQL, sqlParameterSource, new AnnouncementRowMapper());
+    }
+
+    @Override
+    public List<Announcement> findAllFavoritesByUserId(
+            Long limitPerPage, Long offset, Long userId) {
+        final String SQL =
+                "SELECT * FROM announcements a JOIN favorites f ON a.id = f.announcement_id JOIN users u ON f.user_id = u.id WHERE u.id = :user_id ORDER BY a.id DESC LIMIT :limitPerPage OFFSET :offset";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource()
+                        .addValue("limitPerPage", limitPerPage)
+                        .addValue("offset", offset)
+                        .addValue("user_id", userId);
+        return namedParameterJdbcTemplate.query(
+                SQL, sqlParameterSource, new AnnouncementRowMapper());
+    }
+
+    @Override
+    public List<Announcement> findAllByVehicleUsage(
+            Long limitPerPage, Long offset, Boolean isUsed) {
+        final String SQL =
+                "SELECT a.* FROM announcements AS a JOIN vehicles AS v ON a.vehicle_id = v.id WHERE v.is_used = :is_used ORDER BY a.id DESC LIMIT :limitPerPage OFFSET :offset";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource()
+                        .addValue("limitPerPage", limitPerPage)
+                        .addValue("offset", offset)
+                        .addValue("is_used", isUsed);
+        return namedParameterJdbcTemplate.query(
+                SQL, sqlParameterSource, new AnnouncementRowMapper());
+    }
+
+    @Override
     public Optional<Announcement> findById(Long id) {
         final String SQL = "SELECT * FROM announcements WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
@@ -100,5 +141,22 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     public Long findTotalCount() {
         final String SQL = "SELECT COUNT(*) FROM announcements";
         return namedParameterJdbcTemplate.queryForObject(SQL, new HashMap<>(), Long.class);
+    }
+
+    @Override
+    public Long findTotalCountByUserId(Long userId) {
+        final String SQL = "SELECT COUNT(*) FROM announcements WHERE user_id = :user_id";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource().addValue("user_id", userId);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+    }
+
+    @Override
+    public Long findTotalCountByVehicleUsage(Boolean isUsed) {
+        final String SQL =
+                "SELECT COUNT(*) FROM announcements a JOIN vehicles v ON a.vehicle_id = v.id WHERE v.is_used = :is_used";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource().addValue("is_used", isUsed);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
     }
 }
