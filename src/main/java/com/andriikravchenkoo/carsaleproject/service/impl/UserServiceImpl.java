@@ -76,4 +76,9 @@ public class UserServiceImpl implements UserService {
     public void delete(User user) {
         userDao.delete(user);
     }
+
+    @Override
+    public Boolean checkIsSellerInDealership(String email, Long dealershipId) {
+        return userDao.checkIsSellerInDealership(email, dealershipId);
+    }
 }

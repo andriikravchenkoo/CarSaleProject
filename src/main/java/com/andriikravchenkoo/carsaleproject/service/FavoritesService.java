@@ -10,7 +10,7 @@ public interface FavoritesService {
 
     void deleteAllByAnnouncementId(Long announcementId);
 
-    boolean checkExistence(Favorites favorites);
+    Boolean checkIsExistence(Favorites favorites);
 
     Long findTotalCountByUserId(Long userId);
 }

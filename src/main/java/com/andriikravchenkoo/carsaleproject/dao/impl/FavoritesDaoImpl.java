@@ -53,14 +53,14 @@ public class FavoritesDaoImpl implements FavoritesDao {
     }
 
     @Override
-    public Long checkExistence(Favorites favorites) {
+    public Boolean checkIsExistence(Favorites favorites) {
         final String SQL =
-                "SELECT COUNT(*) FROM favorites WHERE user_id = :user_id AND announcement_id = :announcement_id";
+                "SELECT EXISTS (SELECT 1 FROM favorites WHERE user_id = :user_id AND announcement_id = :announcement_id) AS is_favorite";
         SqlParameterSource sqlParameterSource =
                 new MapSqlParameterSource()
                         .addValue("user_id", favorites.getUserId())
                         .addValue("announcement_id", favorites.getAnnouncementId());
-        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Boolean.class);
     }
 
     @Override

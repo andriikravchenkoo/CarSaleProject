@@ -90,7 +90,7 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
         Favorites favorites = new Favorites(authenticationUser.getId(), announcementId);
 
         return announcement.toDto(
-                favoritesService.checkExistence(favorites),
+                favoritesService.checkIsExistence(favorites),
                 announcementService.checkOwner(announcementId, authenticationUser.getId()));
     }
 
@@ -123,6 +123,16 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     public List<AnnouncementPageDto> getAllAnnouncementByVehicleUsage(
             Long limitPerPage, Long offset, Boolean isUsed) {
         return announcementService.findAllByVehicleUsage(limitPerPage, offset, isUsed).stream()
+                .map(this::mapToAnnouncementPageDto)
+                .toList();
+    }
+
+    @Override
+    public List<AnnouncementPageDto> getAllAnnouncementsByDealership(
+            Long limitPerPage, Long offset, Long dealershipId) {
+        return announcementService
+                .findAllByDealershipId(limitPerPage, offset, dealershipId)
+                .stream()
                 .map(this::mapToAnnouncementPageDto)
                 .toList();
     }
@@ -180,5 +190,10 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     @Override
     public Long getTotalCountAnnouncementByVehicleUsage(Boolean isUsed) {
         return announcementService.findTotalCountByVehicleUsage(isUsed);
+    }
+
+    @Override
+    public Long getTotalCountAnnouncementsByDealershipId(Long dealershipId) {
+        return announcementService.findTotalCountByDealershipId(dealershipId);
     }
 }

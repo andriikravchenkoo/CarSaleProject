@@ -10,7 +10,7 @@ public interface FavoritesDao {
 
     void deleteAllByAnnouncementId(Long announcementId);
 
-    Long checkExistence(Favorites favorites);
+    Boolean checkIsExistence(Favorites favorites);
 
     Long findTotalCountByUserId(Long userId);
 }

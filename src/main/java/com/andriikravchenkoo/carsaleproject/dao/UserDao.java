@@ -22,4 +22,6 @@ public interface UserDao {
     User saveDealership(User user);
 
     void delete(User user);
+
+    Boolean checkIsSellerInDealership(String email, Long dealershipId);
 }

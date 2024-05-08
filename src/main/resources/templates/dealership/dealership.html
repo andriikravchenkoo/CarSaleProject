@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Dealership</title>
@@ -48,12 +48,12 @@
                 <li class="mb-3"><strong>Region:</strong> <span th:text="${dealership.region}"></span></li>
                 <li class="mb-3"><strong>Address:</strong> <span th:text="${dealership.address}"></span></li>
                 <li class="mb-3"><strong>Phone number:</strong> <span th:text="${dealership.phoneNumber}"></span></li>
-                <li class="mb-3"><a th:href="@{/dealership/{id}/vehicles}">All vehicles in dealership</a></li>
+                <li class="mb-3"><a th:href="@{'/announcement/by-dealership/' + ${dealership.getId()} + '/page?pageId=1'}">All vehicles in dealership</a></li>
             </ul>
             <form method="post" th:action="@{/dealership/add-seller}" id="sellerForm">
                 <input type="hidden" name="dealershipId" th:value="${dealership.id}"/>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sellerModal">Become a
-                    seller
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sellerModal"
+                        sec:authorize="hasAuthority('SELLER')" th:if="${!dealership.isSeller}">Become a seller
                 </button>
             </form>
             <div class="modal fade" id="sellerModal" tabindex="-1" role="dialog" aria-labelledby="sellerModalLabel"

@@ -30,9 +30,8 @@ public class FavoritesServiceImpl implements FavoritesService {
     }
 
     @Override
-    public boolean checkExistence(Favorites favorites) {
-        Long result = favoritesDao.checkExistence(favorites);
-        return result != null && result > 0;
+    public Boolean checkIsExistence(Favorites favorites) {
+        return favoritesDao.checkIsExistence(favorites);
     }
 
     @Override

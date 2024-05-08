@@ -35,7 +35,7 @@ public class VehicleAnnouncementCreateDto {
 
     @NotNull(message = "Year is required")
     @Min(value = 1900, message = "Minimum year for a vehicle 1900")
-    @Max(value = 2023, message = "Maximum year for a vehicle 2023")
+    @Max(value = 2024, message = "Maximum year for a vehicle 2024")
     private Integer year;
 
     private EngineType engineType;

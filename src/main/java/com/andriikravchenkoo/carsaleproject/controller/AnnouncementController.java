@@ -144,7 +144,7 @@ public class AnnouncementController {
     }
 
     @GetMapping("/new-vehicles/page")
-    public String getAllAnnouncementByNewVehicleForPage(@RequestParam Long pageId, Model model) {
+    public String getAllAnnouncementsByNewVehicleForPage(@RequestParam Long pageId, Model model) {
         long offset = (pageId - 1) * limitPerPage;
 
         List<AnnouncementPageDto> announcements =
@@ -163,7 +163,7 @@ public class AnnouncementController {
     }
 
     @GetMapping("/used-vehicles/page")
-    public String getAllAnnouncementByUsedVehicleForPage(@RequestParam Long pageId, Model model) {
+    public String getAllAnnouncementsByUsedVehicleForPage(@RequestParam Long pageId, Model model) {
         long offset = (pageId - 1) * limitPerPage;
 
         List<AnnouncementPageDto> announcements =
@@ -179,6 +179,28 @@ public class AnnouncementController {
         model.addAttribute("totalPages", totalPages);
 
         return "announcement/used_vehicle_announcements";
+    }
+
+    @GetMapping("/by-dealership/{dealershipId}/page")
+    public String getAllAnnouncementsByDealershipForPage(
+            @PathVariable Long dealershipId, @RequestParam Long pageId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllAnnouncementsByDealership(
+                        limitPerPage, offset, dealershipId);
+
+        long totalCountAnnouncements =
+                announcementServiceFacade.getTotalCountAnnouncementsByDealershipId(dealershipId);
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("dealershipId", dealershipId);
+        model.addAttribute("hasAnnouncements", totalCountAnnouncements > 0);
+
+        return "announcement/announcements_by_dealership";
     }
 
     @PostMapping("/add-to-favorites")

@@ -87,6 +87,20 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     }
 
     @Override
+    public List<Announcement> findAllByDealershipId(
+            Long limitPerPage, Long offset, Long dealershipId) {
+        final String SQL =
+                "SELECT a.* FROM announcements a JOIN users u ON a.user_id = u.id JOIN dealerships d ON u.dealership_id = d.id WHERE d.id = :dealership_id ORDER BY a.id DESC LIMIT :limitPerPage OFFSET :offset";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource()
+                        .addValue("limitPerPage", limitPerPage)
+                        .addValue("offset", offset)
+                        .addValue("dealership_id", dealershipId);
+        return namedParameterJdbcTemplate.query(
+                SQL, sqlParameterSource, new AnnouncementRowMapper());
+    }
+
+    @Override
     public Optional<Announcement> findById(Long id) {
         final String SQL = "SELECT * FROM announcements WHERE id = :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
@@ -127,14 +141,14 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     }
 
     @Override
-    public Long checkOwner(Long announcementId, Long userId) {
+    public Boolean checkIsOwner(Long announcementId, Long userId) {
         final String SQL =
-                "SELECT COUNT(*) AS count_owner FROM announcements AS a JOIN users AS u ON a.user_id = u.id WHERE a.id = :announcement_id AND u.id = :user_id";
+                "SELECT EXISTS (SELECT 1 FROM announcements AS a WHERE a.id = :announcement_id AND a.user_id = :user_id) AS is_owner";
         SqlParameterSource sqlParameterSource =
                 new MapSqlParameterSource()
                         .addValue("announcement_id", announcementId)
                         .addValue("user_id", userId);
-        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Boolean.class);
     }
 
     @Override
@@ -157,6 +171,15 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
                 "SELECT COUNT(*) FROM announcements a JOIN vehicles v ON a.vehicle_id = v.id WHERE v.is_used = :is_used";
         SqlParameterSource sqlParameterSource =
                 new MapSqlParameterSource().addValue("is_used", isUsed);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+    }
+
+    @Override
+    public Long findTotalCountByDealershipId(Long dealershipId) {
+        final String SQL =
+                "SELECT COUNT(*) FROM announcements a JOIN users u ON a.user_id = u.id JOIN dealerships d ON u.dealership_id = d.id WHERE d.id = :dealership_id";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource().addValue("dealership_id", dealershipId);
         return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
     }
 }

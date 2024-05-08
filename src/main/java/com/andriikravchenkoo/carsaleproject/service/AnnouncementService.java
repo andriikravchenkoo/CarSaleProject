@@ -16,17 +16,21 @@ public interface AnnouncementService {
 
     List<Announcement> findAllByVehicleUsage(Long limitPerPage, Long offset, Boolean isUsed);
 
+    List<Announcement> findAllByDealershipId(Long limitPerPage, Long offset, Long dealershipId);
+
     Announcement findById(Long id);
 
     Announcement save(Announcement announcement);
 
     void delete(Announcement announcement);
 
-    boolean checkOwner(Long announcementId, Long userId);
+    Boolean checkOwner(Long announcementId, Long userId);
 
     Long findTotalCount();
 
     Long findTotalCountBuUserId(Long userId);
 
     Long findTotalCountByVehicleUsage(Boolean isUsed);
+
+    Long findTotalCountByDealershipId(Long dealershipId);
 }

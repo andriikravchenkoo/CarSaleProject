@@ -43,7 +43,7 @@ public class Dealership {
         this.description = description;
     }
 
-    public DealershipPageDto toDto(List<Image> images) {
+    public DealershipPageDto toDto(List<Image> images, Boolean isSeller) {
         return DealershipPageDto.builder()
                 .id(this.id)
                 .name(this.name)
@@ -52,6 +52,7 @@ public class Dealership {
                 .phoneNumber(this.phoneNumber)
                 .description(this.description)
                 .images(images)
+                .isSeller(isSeller)
                 .build();
     }
 }

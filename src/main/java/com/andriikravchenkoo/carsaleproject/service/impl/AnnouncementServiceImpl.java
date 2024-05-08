@@ -45,6 +45,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    public List<Announcement> findAllByDealershipId(
+            Long limitPerPage, Long offset, Long dealershipId) {
+        return announcementDao.findAllByDealershipId(limitPerPage, offset, dealershipId);
+    }
+
+    @Override
     public Announcement findById(Long id) {
         return announcementDao
                 .findById(id)
@@ -65,8 +71,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public boolean checkOwner(Long announcementId, Long userId) {
-        return announcementDao.checkOwner(announcementId, userId) == 1;
+    public Boolean checkOwner(Long announcementId, Long userId) {
+        return announcementDao.checkIsOwner(announcementId, userId);
     }
 
     @Override
@@ -82,5 +88,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public Long findTotalCountByVehicleUsage(Boolean isUsed) {
         return announcementDao.findTotalCountByVehicleUsage(isUsed);
+    }
+
+    @Override
+    public Long findTotalCountByDealershipId(Long dealershipId) {
+        return announcementDao.findTotalCountByDealershipId(dealershipId);
     }
 }

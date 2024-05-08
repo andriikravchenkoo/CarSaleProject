@@ -17,17 +17,21 @@ public interface AnnouncementDao {
 
     List<Announcement> findAllByVehicleUsage(Long limitPerPage, Long offset, Boolean isUsed);
 
+    List<Announcement> findAllByDealershipId(Long limitPerPage, Long offset, Long dealershipId);
+
     Optional<Announcement> findById(Long id);
 
     Announcement save(Announcement announcement);
 
     void delete(Announcement announcement);
 
-    Long checkOwner(Long announcementId, Long userId);
+    Boolean checkIsOwner(Long announcementId, Long userId);
 
     Long findTotalCount();
 
     Long findTotalCountByUserId(Long userId);
 
     Long findTotalCountByVehicleUsage(Boolean isUsed);
+
+    Long findTotalCountByDealershipId(Long dealershipId);
 }

@@ -125,4 +125,15 @@ public class UserDaoImpl implements UserDao {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", user.getId());
         namedParameterJdbcTemplate.update(SQL, sqlParameterSource);
     }
+
+    @Override
+    public Boolean checkIsSellerInDealership(String email, Long dealershipId) {
+        final String SQL =
+                "SELECT EXISTS (SELECT 1 FROM users u JOIN dealerships d ON u.dealership_id = d.id WHERE u.email = :email AND u.role = 'SELLER' AND d.id = :dealership_id)";
+        SqlParameterSource sqlParameterSource =
+                new MapSqlParameterSource()
+                        .addValue("email", email)
+                        .addValue("dealership_id", dealershipId);
+        return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Boolean.class);
+    }
 }

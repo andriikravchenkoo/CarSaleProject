@@ -59,26 +59,34 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
     @Override
     @Transactional
-    public void createDealership(
+    public Long createDealership(
             DealershipCreateDto dealershipCreateDto, List<MultipartFile> files, User user) {
-        Dealership dealership = dealershipService.save(dealershipCreateDto.toEntity());
+        Dealership savedDealership = dealershipService.save(dealershipCreateDto.toEntity());
 
         List<Image> images = imageService.saveAll(files);
 
-        dealership.setImages(images);
+        savedDealership.setImages(images);
 
-        imageService.saveAllDealershipImages(dealership);
+        imageService.saveAllDealershipImages(savedDealership);
 
-        user.setDealership(dealership);
+        user.setDealership(savedDealership);
 
         userService.saveDealership(user);
+
+        return savedDealership.getId();
     }
 
     @Override
-    public DealershipPageDto getDealershipWithImages(Long id) {
+    public DealershipPageDto getDealershipWithImages(Long id, User authenticationUser) {
         List<Image> images = imageService.findAllByDealershipId(id);
 
-        return dealershipService.findById(id).toDto(images);
+        Dealership dealership = dealershipService.findById(id);
+
+        Boolean isSeller =
+                userService.checkIsSellerInDealership(
+                        authenticationUser.getEmail(), dealership.getId());
+
+        return dealership.toDto(images, isSeller);
     }
 
     @Override

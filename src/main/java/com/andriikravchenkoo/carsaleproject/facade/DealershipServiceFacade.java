@@ -14,10 +14,10 @@ public interface DealershipServiceFacade {
 
     Long getTotalCountDealerships();
 
-    void createDealership(
+    Long createDealership(
             DealershipCreateDto dealershipCreateDto, List<MultipartFile> files, User user);
 
-    DealershipPageDto getDealershipWithImages(Long id);
+    DealershipPageDto getDealershipWithImages(Long id, User authenticationUser);
 
     void becomeSeller(Long dealershipId, User user);
 }

@@ -49,14 +49,17 @@ public class DealershipController {
             return "dealership/create";
         }
 
-        dealershipServiceFacade.createDealership(dealershipCreateDto, files, user);
+        Long createdDealershipId =
+                dealershipServiceFacade.createDealership(dealershipCreateDto, files, user);
 
-        return "redirect:/vehicle/home";
+        return "redirect:/dealership/" + createdDealershipId;
     }
 
     @GetMapping("/{id}")
-    public String getDealershipPage(@PathVariable Long id, Model model) {
-        DealershipPageDto dealership = dealershipServiceFacade.getDealershipWithImages(id);
+    public String getDealershipPage(
+            @PathVariable Long id, Model model, @AuthenticationPrincipal User authenticationUser) {
+        DealershipPageDto dealership =
+                dealershipServiceFacade.getDealershipWithImages(id, authenticationUser);
         model.addAttribute("images", dealership.getImages());
         model.addAttribute("dealership", dealership);
         return "dealership/dealership";
@@ -81,8 +84,9 @@ public class DealershipController {
 
     @PostMapping("/add-seller")
     public String postBecomingSellerInDealership(
-            @RequestParam("dealershipId") Long dealershipId, @AuthenticationPrincipal User user) {
-        dealershipServiceFacade.becomeSeller(dealershipId, user);
+            @RequestParam("dealershipId") Long dealershipId,
+            @AuthenticationPrincipal User authenticationUser) {
+        dealershipServiceFacade.becomeSeller(dealershipId, authenticationUser);
         return "redirect:/dealership/" + dealershipId;
     }
 }

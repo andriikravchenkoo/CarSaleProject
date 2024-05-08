@@ -29,6 +29,9 @@ public interface AnnouncementServiceFacade {
     List<AnnouncementPageDto> getAllAnnouncementByVehicleUsage(
             Long limitPerPage, Long offset, Boolean isUsed);
 
+    List<AnnouncementPageDto> getAllAnnouncementsByDealership(
+            Long limitPerPage, Long offset, Long dealershipId);
+
     void deleteAnnouncement(Long announcementId);
 
     void addAnnouncementToFavorites(Long announcementId, Long userId);
@@ -42,4 +45,6 @@ public interface AnnouncementServiceFacade {
     Long getTotalCountFavoritesAnnouncementByUser(Long userId);
 
     Long getTotalCountAnnouncementByVehicleUsage(Boolean isUsed);
+
+    Long getTotalCountAnnouncementsByDealershipId(Long dealershipId);
 }

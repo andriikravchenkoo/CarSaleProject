@@ -32,6 +32,8 @@ public class DealershipPageDto {
 
     private Long countVehicles;
 
+    private Boolean isSeller;
+
     public DealershipPageDto(
             Long id, String name, Region region, List<Image> images, Long countVehicles) {
         this.id = id;
