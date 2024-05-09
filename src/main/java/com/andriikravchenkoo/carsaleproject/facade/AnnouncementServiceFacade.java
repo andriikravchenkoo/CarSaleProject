@@ -14,17 +14,17 @@ public interface AnnouncementServiceFacade {
     Long createAnnouncement(
             VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
             List<MultipartFile> files,
-            User user);
+            User authenticationUser);
 
-    AnnouncementPageDto getAnnouncementWithImages(Long announcementId, User authenticationUser)
+    AnnouncementPageDto getAnnouncementWithImages(Long announcementId, Long userId)
             throws IOException;
 
     List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset);
 
-    List<AnnouncementPageDto> getAllAnnouncementByUser(Long limitPerPage, Long offset, User user);
+    List<AnnouncementPageDto> getAllAnnouncementByUser(Long limitPerPage, Long offset, Long userId);
 
     List<AnnouncementPageDto> getAllFavoritesAnnouncementsByUser(
-            Long limitPerPage, Long offset, User user);
+            Long limitPerPage, Long offset, Long userId);
 
     List<AnnouncementPageDto> getAllAnnouncementByVehicleUsage(
             Long limitPerPage, Long offset, Boolean isUsed);
@@ -36,7 +36,7 @@ public interface AnnouncementServiceFacade {
 
     void addAnnouncementToFavorites(Long announcementId, Long userId);
 
-    void removeAnnouncementFromFavorites(Long announcementId, Long currentUser);
+    void removeAnnouncementFromFavorites(Long announcementId, Long userId);
 
     Long getTotalCountAnnouncements();
 

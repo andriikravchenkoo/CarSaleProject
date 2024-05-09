@@ -46,7 +46,7 @@ public class AnnouncementController {
             @Valid VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
             BindingResult bindingResult,
             List<MultipartFile> files,
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal User authenticatioUser,
             Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bodyTypes", BodyType.values());
@@ -58,7 +58,7 @@ public class AnnouncementController {
 
         Long createdAnnouncementId =
                 announcementServiceFacade.createAnnouncement(
-                        vehicleAnnouncementCreateDto, files, user);
+                        vehicleAnnouncementCreateDto, files, authenticatioUser);
 
         return "redirect:/announcement/" + createdAnnouncementId;
     }
@@ -68,7 +68,7 @@ public class AnnouncementController {
             @PathVariable Long id, @AuthenticationPrincipal User authenticationUser, Model model)
             throws IOException {
         AnnouncementPageDto announcement =
-                announcementServiceFacade.getAnnouncementWithImages(id, authenticationUser);
+                announcementServiceFacade.getAnnouncementWithImages(id, authenticationUser.getId());
         model.addAttribute("images", announcement.getImages());
         model.addAttribute("dealership", announcement.getUser().getDealership());
         model.addAttribute("user", announcement.getUser());
@@ -96,7 +96,7 @@ public class AnnouncementController {
     }
 
     @GetMapping("/my/page")
-    public String getAllAnnouncementsByUserForPage(
+    public String getAllAnnouncementsForSellerForPage(
             @RequestParam Long pageId,
             @AuthenticationPrincipal User authenticationUser,
             Model model) {
@@ -104,7 +104,7 @@ public class AnnouncementController {
 
         List<AnnouncementPageDto> announcements =
                 announcementServiceFacade.getAllAnnouncementByUser(
-                        limitPerPage, offset, authenticationUser);
+                        limitPerPage, offset, authenticationUser.getId());
 
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountAnnouncementByUser(
@@ -116,7 +116,26 @@ public class AnnouncementController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("hasAnnouncements", totalCountAnnouncements > 0);
 
-        return "announcement/user_announcements";
+        return "announcement/owner-announcements";
+    }
+
+    @GetMapping("/by-seller/{sellerId}/page")
+    public String getAllAnnouncementsBySellerForUsersForPage(
+            @RequestParam Long pageId, @PathVariable Long sellerId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.getAllAnnouncementByUser(limitPerPage, offset, sellerId);
+
+        long totalCountAnnouncements =
+                announcementServiceFacade.getTotalCountAnnouncementByUser(sellerId);
+        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+
+        return "announcement/seller-announcements";
     }
 
     @GetMapping("/my-favorites/page")
@@ -128,7 +147,7 @@ public class AnnouncementController {
 
         List<AnnouncementPageDto> announcements =
                 announcementServiceFacade.getAllFavoritesAnnouncementsByUser(
-                        limitPerPage, offset, authenticationUser);
+                        limitPerPage, offset, authenticationUser.getId());
 
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountFavoritesAnnouncementByUser(
@@ -140,7 +159,7 @@ public class AnnouncementController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("hasFavorites", totalCountAnnouncements > 0);
 
-        return "announcement/user_favorites_announcements";
+        return "announcement/user-favorites-announcements";
     }
 
     @GetMapping("/new-vehicles/page")
@@ -159,7 +178,7 @@ public class AnnouncementController {
         model.addAttribute("pageId", pageId);
         model.addAttribute("totalPages", totalPages);
 
-        return "announcement/new_vehicle_announcements";
+        return "announcement/new-vehicle-announcements";
     }
 
     @GetMapping("/used-vehicles/page")
@@ -178,7 +197,7 @@ public class AnnouncementController {
         model.addAttribute("pageId", pageId);
         model.addAttribute("totalPages", totalPages);
 
-        return "announcement/used_vehicle_announcements";
+        return "announcement/used-vehicle-announcements";
     }
 
     @GetMapping("/by-dealership/{dealershipId}/page")
@@ -200,7 +219,7 @@ public class AnnouncementController {
         model.addAttribute("dealershipId", dealershipId);
         model.addAttribute("hasAnnouncements", totalCountAnnouncements > 0);
 
-        return "announcement/announcements_by_dealership";
+        return "announcement/announcements-by-dealership";
     }
 
     @PostMapping("/add-to-favorites")

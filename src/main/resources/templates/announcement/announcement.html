@@ -128,7 +128,7 @@
                 <li class="mb-3"><strong>Region:</strong> <span th:text="${dealership.region}"></span></li>
                 <li class="mb-3"><strong>Created date:</strong> <span th:text="${announcement.created}"></span></li>
                 <li class="mb-3"><strong>Phone number:</strong> <span th:text="${user.phoneNumber}"></span></li>
-                <li class="mb-3"><a th:href="@{/dealership/{id}/vehicles}">Other ads from the seller</a></li>
+                <li class="mb-3"><a th:href="@{'/announcement/by-seller/' + ${user.getId()} + '/page?pageId=1'}">Other ads from the seller</a></li>
             </ul>
             <h4 class="mb-2">Vehicle</h4>
             <ul class="list-unstyled">

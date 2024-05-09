@@ -26,7 +26,8 @@ public class SecurityConfiguration {
                                         .requestMatchers(
                                                 "/dealership/create",
                                                 "/dealership/add-seller",
-                                                "/announcement/create")
+                                                "/announcement/create",
+                                                "/announcement/my/page/**")
                                         .hasAuthority("SELLER")
                                         .anyRequest()
                                         .authenticated())

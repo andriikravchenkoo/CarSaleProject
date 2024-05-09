@@ -36,10 +36,10 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     public Long createAnnouncement(
             VehicleAnnouncementCreateDto vehicleAnnouncementCreateDto,
             List<MultipartFile> files,
-            User user) {
+            User authenticationUser) {
         Vehicle vehicle = vehicleAnnouncementCreateDto.toVehicleEntity();
 
-        Dealership dealership = dealershipService.findByUserEmail(user.getEmail());
+        Dealership dealership = dealershipService.findByUserEmail(authenticationUser.getEmail());
 
         vehicle.setDealership(dealership);
 
@@ -49,7 +49,7 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
         announcement.setImages(images);
 
-        announcement.setUser(user);
+        announcement.setUser(authenticationUser);
 
         Vehicle savedVehicle = vehicleService.save(vehicle);
 
@@ -63,8 +63,8 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
     }
 
     @Override
-    public AnnouncementPageDto getAnnouncementWithImages(
-            Long announcementId, User authenticationUser) throws IOException {
+    public AnnouncementPageDto getAnnouncementWithImages(Long announcementId, Long userId)
+            throws IOException {
         List<Image> images = imageService.findAllByAnnouncementId(announcementId);
 
         Announcement announcement = announcementService.findById(announcementId);
@@ -87,11 +87,11 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
         announcement.setVehicle(vehicle);
 
-        Favorites favorites = new Favorites(authenticationUser.getId(), announcementId);
+        Favorites favorites = new Favorites(userId, announcementId);
 
         return announcement.toDto(
                 favoritesService.checkIsExistence(favorites),
-                announcementService.checkOwner(announcementId, authenticationUser.getId()));
+                announcementService.checkOwner(announcementId, userId));
     }
 
     @Override
@@ -103,18 +103,16 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
     @Override
     public List<AnnouncementPageDto> getAllAnnouncementByUser(
-            Long limitPerPage, Long offset, User user) {
-        return announcementService.findAllByUserId(limitPerPage, offset, user.getId()).stream()
+            Long limitPerPage, Long offset, Long userId) {
+        return announcementService.findAllByUserId(limitPerPage, offset, userId).stream()
                 .map(this::mapToAnnouncementPageDto)
                 .toList();
     }
 
     @Override
     public List<AnnouncementPageDto> getAllFavoritesAnnouncementsByUser(
-            Long limitPerPage, Long offset, User user) {
-        return announcementService
-                .findAllFavoritesByUserId(limitPerPage, offset, user.getId())
-                .stream()
+            Long limitPerPage, Long offset, Long userId) {
+        return announcementService.findAllFavoritesByUserId(limitPerPage, offset, userId).stream()
                 .map(this::mapToAnnouncementPageDto)
                 .toList();
     }
