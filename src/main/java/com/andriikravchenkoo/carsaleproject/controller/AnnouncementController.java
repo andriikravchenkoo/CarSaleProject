@@ -34,10 +34,7 @@ public class AnnouncementController {
     @GetMapping("/create")
     public String getCreateAnnouncementPage(Model model) {
         model.addAttribute("vehicleAnnouncementCreateDto", new VehicleAnnouncementCreateDto());
-        model.addAttribute("bodyTypes", BodyType.values());
-        model.addAttribute("engineTypes", EngineType.values());
-        model.addAttribute("transmissions", Transmission.values());
-        model.addAttribute("colors", Color.values());
+        addVehicleAttributes(model);
         return "announcement/create";
     }
 
@@ -49,18 +46,21 @@ public class AnnouncementController {
             @AuthenticationPrincipal User authenticatioUser,
             Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("bodyTypes", BodyType.values());
-            model.addAttribute("engineTypes", EngineType.values());
-            model.addAttribute("transmissions", Transmission.values());
-            model.addAttribute("colors", Color.values());
+            addVehicleAttributes(model);
             return "announcement/create";
         }
 
         Long createdAnnouncementId =
                 announcementServiceFacade.createAnnouncement(
                         vehicleAnnouncementCreateDto, files, authenticatioUser);
-
         return "redirect:/announcement/" + createdAnnouncementId;
+    }
+
+    private void addVehicleAttributes(Model model) {
+        model.addAttribute("bodyTypes", BodyType.values());
+        model.addAttribute("engineTypes", EngineType.values());
+        model.addAttribute("transmissions", Transmission.values());
+        model.addAttribute("colors", Color.values());
     }
 
     @GetMapping("/{id}")
@@ -86,11 +86,9 @@ public class AnnouncementController {
                 announcementServiceFacade.getAllAnnouncementsByDate(limitPerPage, offset);
 
         long totalCountAnnouncements = announcementServiceFacade.getTotalCountAnnouncements();
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/announcements";
     }
@@ -109,12 +107,9 @@ public class AnnouncementController {
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountAnnouncementByUser(
                         authenticationUser.getId());
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("hasAnnouncements", totalCountAnnouncements > 0);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/owner-announcements";
     }
@@ -129,11 +124,9 @@ public class AnnouncementController {
 
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountAnnouncementByUser(sellerId);
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/seller-announcements";
     }
@@ -152,12 +145,9 @@ public class AnnouncementController {
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountFavoritesAnnouncementByUser(
                         authenticationUser.getId());
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("hasFavorites", totalCountAnnouncements > 0);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/user-favorites-announcements";
     }
@@ -172,11 +162,9 @@ public class AnnouncementController {
 
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountAnnouncementByVehicleUsage(false);
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/new-vehicle-announcements";
     }
@@ -191,11 +179,9 @@ public class AnnouncementController {
 
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountAnnouncementByVehicleUsage(true);
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/used-vehicle-announcements";
     }
@@ -211,15 +197,19 @@ public class AnnouncementController {
 
         long totalCountAnnouncements =
                 announcementServiceFacade.getTotalCountAnnouncementsByDealershipId(dealershipId);
-        long totalPages = (long) Math.ceil((double) totalCountAnnouncements / limitPerPage);
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("pageId", pageId);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("dealershipId", dealershipId);
-        model.addAttribute("hasAnnouncements", totalCountAnnouncements > 0);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/announcements-by-dealership";
+    }
+
+    private void setupPaginationModel(
+            Model model, long limitPerPage, long totalItems, long pageId) {
+        long totalPages = (long) Math.ceil((double) totalItems / limitPerPage);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasAnnouncements", totalItems > 0);
     }
 
     @PostMapping("/add-to-favorites")
@@ -241,6 +231,6 @@ public class AnnouncementController {
     @PostMapping("/remove")
     public String postRemoveAnnouncement(@RequestParam("announcementId") Long announcementId) {
         announcementServiceFacade.deleteAnnouncement(announcementId);
-        return "redirect:/vehicle/home";
+        return "redirect:/announcement/my/page?pageId=1";
     }
 }
