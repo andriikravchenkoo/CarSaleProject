@@ -5,76 +5,122 @@
     <title>Create dealership</title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-danger li {
+            list-style-type: none;
+        }
+    </style>
 </head>
 <body>
 
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 
-<div class="vstack gap-2 col-md-4 mx-auto mt-5">
-    <form method="post" th:action="@{/dealership/create}" th:object="${dealershipCreateDto}" enctype="multipart/form-data">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-3 fw-normal text-center">Create Dealership</h1>
+                </div>
+                <div class="card-body">
+                    <form method="post" th:action="@{/dealership/create}" th:object="${dealershipCreateDto}"
+                          enctype="multipart/form-data">
 
-        <h1 class="h1 mb-3 fw-normal">Create dealership</h1>
+                        <div th:fragment="createFragment">
+                            <div class="mb-3">
+                                <label class="form-label" for="name">Name</label>
+                                <input class="form-control" id="name" name="name"
+                                       th:value="${dealershipCreateDto.name}"
+                                       type="text">
+                            </div>
 
-        <div th:fragment="createFragment">
-            <div class="mb-3">
-                <label class="form-label" for="name">Name</label>
-                <input class="form-control" id="name" name="name" th:value="${dealershipCreateDto.name}"
-                       type="name">
-            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="region">Region</label>
+                                <select class="form-select" id="region" name="region">
+                                    <option th:each="region: ${regions}"
+                                            th:selected="${dealershipCreateDto.region == region}"
+                                            th:text="${region}"
+                                            th:value="${region}">
+                                    </option>
+                                </select>
+                            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="region">Region</label>
-                <select class="form-select" id="region" name="region">
-                    <option th:each="region: ${regions}"
-                            th:selected="${dealershipCreateDto.region == region}"
-                            th:text="${region}"
-                            th:value="${region}">
-                </select>
-            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="address">Address</label>
+                                <input class="form-control" id="address" name="address"
+                                       th:value="${dealershipCreateDto.address}"
+                                       type="text">
+                            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="address">Address</label>
-                <input class="form-control" id="address" name="address" th:value="${dealershipCreateDto.address}"
-                       type="address">
-            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="phoneNumber">Phone number</label>
+                                <input class="form-control" id="phoneNumber" name="phoneNumber"
+                                       placeholder="+380555555555"
+                                       th:value="${dealershipCreateDto.phoneNumber}"
+                                       type="text">
+                            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="phoneNumber">Phone number</label>
-                <input class="form-control" id="phoneNumber" name="phoneNumber" placeholder="+380555555555"
-                       th:value="${dealershipCreateDto.phoneNumber}"
-                       type="phoneNumber">
-            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description"
+                                          th:text="${dealershipCreateDto.description}"></textarea>
+                            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" id="description" name="description"
-                          th:text="${dealershipCreateDto.description}"></textarea>
-            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="files">Photos</label>
+                                <input class="form-control" id="files" name="files" type="file"
+                                       accept="image/png, image/jpeg" multiple>
+                            </div>
+                        </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="files">Photos</label>
-                <input class="form-control" id="files" name="files" type="file" accept="image/png, image/jpeg" multiple>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" type="submit">Place a dealership</button>
+                        </div>
+
+                        <div th:if="${#fields.hasErrors()}">
+                            <div class="alert alert-danger mt-4">
+                                <ul>
+                                    <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div th:if="${errorMessage}" class="alert alert-danger mt-4" role="alert">
+                            <li th:text="${errorMessage}"></li>
+                        </div>
+
+                    </form>
+
+                </div>
+
             </div>
         </div>
-
-        <div class="text-center">
-            <button class="btn btn-secondary" type="submit">Place a dealership</button>
-        </div>
-
-        <div th:if="${#fields.hasErrors()}">
-            <div class="alert alert-danger mt-4">
-                <ul>
-                    <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
-                </ul>
-            </div>
-        </div>
-
-        <div th:if="${errorMessage}" class="alert alert-danger mt-4" role="alert">
-            <li th:text="${errorMessage}"></li>
-        </div>
-
-    </form>
-
+    </div>
 </div>
 
 <div th:insert="~{fragments/footer :: footer}"></div>
