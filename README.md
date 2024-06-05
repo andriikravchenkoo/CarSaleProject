@@ -1,31 +1,41 @@
 # Car Sale Project
 
-## Profiles passwords
+## Introduction
+An application built on the basis of MVC, which copies a car buying service. The user can view dealers and their advertisements for selling cars, and add them to favorites. The dealer can create car dealerships and add advertisements to the site.
+Project is currently under development.
 
-All sellers - **seller**
+## Features
 
-All customers - **customer**
+* Registration and authorization by roles
+* Creation of dealerships and advertisements
+* View advertisements and add them to favorites
+* View a list of advertisements on pages
 
-## Endpoints
+## Technical details
 
-http://localhost:8080/car-sale/vehicle/home - home page
+**Technology stack**:
 
-http://localhost:8080/car-sale/dealership/create - create dealership
+* JDK 17
+* Spring Boot
+* Spring JDBC
+* Spring Security
+* Spring MVC
+* Thymeleaf
+* PostgreSQL
+* Lombok
+* Logback
+* JUnit 5
 
-http://localhost:8080/car-sale/dealership/{id} - dealership by id
+## Users profiles
 
-http://localhost:8080/car-sale/announcement/create - create announcement
+Seller: **email** - seller@gmail.com, **password** - seller
 
-http://localhost:8080/car-sale/announcement/{id} - announcement by id
-
-http://localhost:8080/car-sale/announcement/page?pageId={id} - list of announcement
-
-http://localhost:8080/car-sale/announcement/page?pageId={id} - list of announcement
+Customers - **email** - customer@gmail.com, **password** - customer
 
 ## Contributing
 
 1. Clone the project locally on your machine
 2. Run schema.sql script
-3. On first run change images:loaded: true to images:loaded: false in application.yml to initialize images to database. After the first run, the value must be returned to true
-4. Run data.sql script 
+3. Run applications so that images are saved in the database
+4. Run data.sql script
 5. Run application
