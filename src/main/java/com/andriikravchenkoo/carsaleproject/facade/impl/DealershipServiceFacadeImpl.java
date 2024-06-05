@@ -1,6 +1,7 @@
 package com.andriikravchenkoo.carsaleproject.facade.impl;
 
-import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipCreateDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipPageDto;
 import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
@@ -10,65 +11,98 @@ import com.andriikravchenkoo.carsaleproject.service.DealershipService;
 import com.andriikravchenkoo.carsaleproject.service.ImageService;
 import com.andriikravchenkoo.carsaleproject.service.UserService;
 import com.andriikravchenkoo.carsaleproject.service.VehicleService;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
-  private final DealershipService dealershipService;
+    private final DealershipService dealershipService;
 
-  private final ImageService imageService;
+    private final ImageService imageService;
 
-  private final UserService userService;
+    private final UserService userService;
 
-  private final VehicleService vehicleService;
+    private final VehicleService vehicleService;
 
-  @Override
-  @Transactional
-  public void createDealership(DealershipDto dealershipDto, List<MultipartFile> files, User user) {
-    Dealership dealership = dealershipService.save(dealershipDto.toEntity());
+    @Override
+    public List<DealershipPageDto> getAllDealershipsByDate(Long limitPerPage, Long offset) {
+        return dealershipService.findAllByDateForPage(limitPerPage, offset).stream()
+                .map(this::mapToDealershipPageDto)
+                .toList();
+    }
 
-    List<Image> images = imageService.saveAll(files);
+    private DealershipPageDto mapToDealershipPageDto(Dealership dealership) {
+        List<Image> images = imageService.findAllByDealershipId(dealership.getId());
+        Long countOfVehiclesInDealership =
+                vehicleService.findCountByDealershipId(dealership.getId());
 
-    dealership.setImages(images);
+        return new DealershipPageDto(
+                dealership.getId(),
+                dealership.getName(),
+                dealership.getRegion(),
+                images,
+                countOfVehiclesInDealership);
+    }
 
-    imageService.saveAllDealershipImages(dealership);
+    @Override
+    public Long getTotalCountDealerships() {
+        return dealershipService.findTotalCount();
+    }
 
-    user.setDealership(dealership);
+    @Override
+    @Transactional
+    public Long createDealership(
+            DealershipCreateDto dealershipCreateDto, List<MultipartFile> files, User user) {
+        Dealership savedDealership = dealershipService.save(dealershipCreateDto.toEntity());
 
-    userService.saveDealership(user);
-  }
+        List<Image> images = imageService.saveAll(files);
 
-  @Override
-  public Dealership getDealershipWithImages(Long id) {
-    List<Image> images = imageService.findAllByDealershipId(id);
+        savedDealership.setImages(images);
 
-    Dealership dealership = dealershipService.findById(id);
+        imageService.saveAllDealershipImages(savedDealership);
 
-    dealership.setImages(images);
+        user.setDealership(savedDealership);
 
-    return dealership;
-  }
+        userService.saveDealership(user);
 
-  @Override
-  @Transactional
-  public void becomeSeller(Long dealershipId, User user) {
-    List<Vehicle> vehicles = vehicleService.findAllByUserId(user.getId());
+        return savedDealership.getId();
+    }
 
-    Dealership dealership = dealershipService.findById(dealershipId);
+    @Override
+    public DealershipPageDto getDealershipWithImages(Long id, User authenticationUser) {
+        List<Image> images = imageService.findAllByDealershipId(id);
 
-    List<Vehicle> savedVehicles =
-        vehicles.stream().peek(vehicle -> vehicle.setDealership(dealership)).toList();
+        Dealership dealership = dealershipService.findById(id);
 
-    vehicleService.updateAllWithNewDealerships(savedVehicles);
+        Boolean isSeller =
+                userService.checkIsSellerInDealership(
+                        authenticationUser.getEmail(), dealership.getId());
 
-    user.setDealership(dealership);
+        return dealership.toDto(images, isSeller);
+    }
 
-    userService.saveDealership(user);
-  }
+    @Override
+    @Transactional
+    public void becomeSeller(Long dealershipId, User user) {
+        List<Vehicle> vehicles = vehicleService.findAllByUserId(user.getId());
+
+        Dealership dealership = dealershipService.findById(dealershipId);
+
+        List<Vehicle> savedVehicles =
+                vehicles.stream().peek(vehicle -> vehicle.setDealership(dealership)).toList();
+
+        vehicleService.updateAllWithNewDealerships(savedVehicles);
+
+        user.setDealership(dealership);
+
+        userService.saveDealership(user);
+    }
 }

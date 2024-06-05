@@ -3,48 +3,52 @@ package com.andriikravchenkoo.carsaleproject.controller;
 import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
 import com.andriikravchenkoo.carsaleproject.model.enums.Role;
 import com.andriikravchenkoo.carsaleproject.security.facade.RegistrationServiceFacade;
-import java.io.IOException;
-import javax.validation.Valid;
+
+import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/authentication")
 public class AuthenticationController {
 
-  private final RegistrationServiceFacade registrationServiceFacade;
+    private final RegistrationServiceFacade registrationServiceFacade;
 
-  @GetMapping("/login")
-  public String getLoginPage() {
-    return "authentication/login";
-  }
-
-  @GetMapping("/register")
-  public String getRegisterPage(Model model) {
-    model.addAttribute("registerRequestDto", new RegisterRequestDto());
-    model.addAttribute("roles", Role.values());
-    return "authentication/register";
-  }
-
-  @PostMapping("/register")
-  public String postRegisterPage(
-      @Valid RegisterRequestDto registerRequestDto,
-      BindingResult bindingResult,
-      MultipartFile file,
-      Model model)
-      throws IOException {
-    if (bindingResult.hasErrors()) {
-      model.addAttribute("roles", Role.values());
-      return "authentication/register";
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "authentication/login";
     }
 
-    registrationServiceFacade.register(registerRequestDto, file);
+    @GetMapping("/register")
+    public String getRegisterPage(Model model) {
+        model.addAttribute("registerRequestDto", new RegisterRequestDto());
+        model.addAttribute("roles", Role.values());
+        return "authentication/register";
+    }
 
-    return "redirect:/authentication/login";
-  }
+    @PostMapping("/register")
+    public String postRegisterPage(
+            @Valid RegisterRequestDto registerRequestDto,
+            BindingResult bindingResult,
+            MultipartFile file,
+            Model model)
+            throws IOException {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", Role.values());
+            return "authentication/register";
+        }
+
+        registrationServiceFacade.register(registerRequestDto, file);
+
+        return "redirect:/authentication/login";
+    }
 }

@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Favorites {
 
-  private Long id;
+    private Long id;
 
-  private Long userId;
+    private Long userId;
 
-  private Long announcementId;
+    private Long announcementId;
 
-  public Favorites(Long userId, Long announcementId) {
-    this.userId = userId;
-    this.announcementId = announcementId;
-  }
+    public Favorites(Long userId, Long announcementId) {
+        this.userId = userId;
+        this.announcementId = announcementId;
+    }
 }

@@ -1,15 +1,36 @@
 package com.andriikravchenkoo.carsaleproject.service;
 
 import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
+
 import java.util.List;
 
 public interface AnnouncementService {
 
-  List<Announcement> findAll();
+    List<Announcement> findAll();
 
-  Announcement findById(Long id);
+    List<Announcement> findAllByDateForPage(Long limitPerPage, Long offset);
 
-  Announcement save(Announcement announcement);
+    List<Announcement> findAllByUserId(Long limitPerPage, Long offset, Long userId);
 
-  void delete(Announcement announcement);
+    List<Announcement> findAllFavoritesByUserId(Long limitPerPage, Long offset, Long userId);
+
+    List<Announcement> findAllByVehicleUsage(Long limitPerPage, Long offset, Boolean isUsed);
+
+    List<Announcement> findAllByDealershipId(Long limitPerPage, Long offset, Long dealershipId);
+
+    Announcement findById(Long id);
+
+    Announcement save(Announcement announcement);
+
+    void delete(Announcement announcement);
+
+    Boolean checkOwner(Long announcementId, Long userId);
+
+    Long findTotalCount();
+
+    Long findTotalCountBuUserId(Long userId);
+
+    Long findTotalCountByVehicleUsage(Boolean isUsed);
+
+    Long findTotalCountByDealershipId(Long dealershipId);
 }

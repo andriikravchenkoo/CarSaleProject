@@ -4,28 +4,31 @@ import com.andriikravchenkoo.carsaleproject.model.entity.Announcement;
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface ImageDao {
 
-  Optional<Image> findById(Long id);
+    Optional<Image> findById(Long id);
 
-  Optional<Image> findByUserId(Long id);
+    Optional<Image> findByUserId(Long id);
 
-  List<Image> findAllByDealershipId(Long id);
+    List<Image> findAllByDealershipId(Long id);
 
-  List<Image> findAllByAnnouncementId(Long id);
+    List<Image> findAllByAnnouncementId(Long id);
 
-  Integer findRowCount();
+    Integer findRowCount();
 
-  Image save(Image image);
+    Image save(Image image);
 
-  List<Image> saveAll(List<Image> images);
+    List<Image> saveAll(List<Image> images);
 
-  Long saveUserImage(User user);
+    Long saveUserImage(User user);
 
-  Long saveAllDealershipImages(Dealership dealership);
+    Long saveAllDealershipImages(Dealership dealership);
 
-  Long saveAllAnnouncementImages(Announcement announcement);
+    Long saveAllAnnouncementImages(Announcement announcement);
+
+    void deleteAllAnnouncementImages(Announcement announcement);
 }

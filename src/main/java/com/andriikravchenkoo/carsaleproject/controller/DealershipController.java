@@ -1,13 +1,16 @@
 package com.andriikravchenkoo.carsaleproject.controller;
 
-import com.andriikravchenkoo.carsaleproject.dto.DealershipDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipCreateDto;
+import com.andriikravchenkoo.carsaleproject.dto.DealershipPageDto;
 import com.andriikravchenkoo.carsaleproject.facade.DealershipServiceFacade;
-import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.Region;
-import java.util.List;
-import javax.validation.Valid;
+
+import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,49 +18,75 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/dealership")
 public class DealershipController {
 
-  private final DealershipServiceFacade dealershipServiceFacade;
+    private final DealershipServiceFacade dealershipServiceFacade;
 
-  @GetMapping("/create")
-  public String getCreateDealershipPage(Model model) {
-    model.addAttribute("dealershipDto", new DealershipDto());
-    model.addAttribute("regions", Region.values());
-    return "dealership/create";
-  }
+    @Value("${limit.per.page}")
+    private Long limitPerPage;
 
-  @PostMapping("/create")
-  public String postCreateDealershipPage(
-      @Valid DealershipDto dealershipDto,
-      BindingResult bindingResult,
-      List<MultipartFile> files,
-      @AuthenticationPrincipal User user,
-      Model model) {
-    if (bindingResult.hasErrors()) {
-      model.addAttribute("regions", Region.values());
-      return "dealership/create";
+    @GetMapping("/create")
+    public String getCreateDealershipPage(Model model) {
+        model.addAttribute("dealershipCreateDto", new DealershipCreateDto());
+        model.addAttribute("regions", Region.values());
+        return "dealership/create";
     }
 
-    dealershipServiceFacade.createDealership(dealershipDto, files, user);
+    @PostMapping("/create")
+    public String postCreateDealershipPage(
+            @Valid DealershipCreateDto dealershipCreateDto,
+            BindingResult bindingResult,
+            List<MultipartFile> files,
+            @AuthenticationPrincipal User user,
+            Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("regions", Region.values());
+            return "dealership/create";
+        }
 
-    return "redirect:/vehicle/home";
-  }
+        Long createdDealershipId =
+                dealershipServiceFacade.createDealership(dealershipCreateDto, files, user);
 
-  @GetMapping("/{id}")
-  public String getDealershipPage(@PathVariable Long id, Model model) {
-    Dealership dealership = dealershipServiceFacade.getDealershipWithImages(id);
-    model.addAttribute("images", dealership.getImages());
-    model.addAttribute("dealership", dealership);
-    return "dealership/dealership";
-  }
+        return "redirect:/dealership/" + createdDealershipId;
+    }
 
-  @PostMapping("/add-seller")
-  public String postBecomingSellerInDealership(
-      @RequestParam("dealershipId") Long dealershipId, @AuthenticationPrincipal User user) {
-    dealershipServiceFacade.becomeSeller(dealershipId, user);
-    return "redirect:/dealership/" + dealershipId;
-  }
+    @GetMapping("/{id}")
+    public String getDealershipPage(
+            @PathVariable Long id, Model model, @AuthenticationPrincipal User authenticationUser) {
+        DealershipPageDto dealership =
+                dealershipServiceFacade.getDealershipWithImages(id, authenticationUser);
+        model.addAttribute("images", dealership.getImages());
+        model.addAttribute("dealership", dealership);
+        return "dealership/dealership";
+    }
+
+    @GetMapping("/page")
+    public String getAllDealershipsByDateForPage(@RequestParam Long pageId, Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<DealershipPageDto> dealerships =
+                dealershipServiceFacade.getAllDealershipsByDate(limitPerPage, offset);
+
+        long totalCountDealerships = dealershipServiceFacade.getTotalCountDealerships();
+        long totalPages = (long) Math.ceil((double) totalCountDealerships / limitPerPage);
+
+        model.addAttribute("dealerships", dealerships);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+
+        return "dealership/dealerships";
+    }
+
+    @PostMapping("/add-seller")
+    public String postBecomingSellerInDealership(
+            @RequestParam("dealershipId") Long dealershipId,
+            @AuthenticationPrincipal User authenticationUser) {
+        dealershipServiceFacade.becomeSeller(dealershipId, authenticationUser);
+        return "redirect:/dealership/" + dealershipId;
+    }
 }

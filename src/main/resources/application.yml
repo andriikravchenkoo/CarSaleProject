@@ -12,3 +12,7 @@ spring:
 server:
   servlet:
     context-path: /car-sale
+
+limit:
+  per:
+    page: 6

@@ -1,18 +1,25 @@
 package com.andriikravchenkoo.carsaleproject.dao;
 
 import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface DealershipDao {
 
-  List<Dealership> findAll();
+    List<Dealership> findAll();
 
-  Optional<Dealership> findById(Long id);
+    List<Dealership> findAllByDate(Long limitPerPage, Long offset);
 
-  Optional<Dealership> findByUserEmail(String email);
+    Optional<Dealership> findById(Long id);
 
-  Dealership save(Dealership dealership);
+    Optional<Dealership> findByVehicleId(Long id);
 
-  void delete(Dealership dealership);
+    Optional<Dealership> findByUserEmail(String email);
+
+    Long findTotalCount();
+
+    Dealership save(Dealership dealership);
+
+    void delete(Dealership dealership);
 }

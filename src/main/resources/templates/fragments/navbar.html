@@ -17,26 +17,22 @@
 
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a th:href="@{/vehicle/home}"
+                <a th:href="@{/announcement/page?pageId=1}"
                    class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                     <img th:src="@{/images/favicon.png}" class="bi me-2 pb-2"/>
                     <h4><strong>Car Sale</strong></h4>
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto ms-4 mb-2 justify-content-center mb-md-0">
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
-                        <i class="bi bi-house-door"></i> Home</a>
+                    <li><a th:href="@{/announcement/used-vehicles/page?pageId=1}" class="nav-link px-2 text-white">
+                        <i class="bi bi-car-front"></i> Used vehicles</a>
                     </li>
 
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
-                        <i class="bi bi-car-front"></i> Used cars</a>
+                    <li><a th:href="@{/announcement/new-vehicles/page?pageId=1}" class="nav-link px-2 text-white">
+                        <i class="bi bi-car-front-fill"></i> New vehicles</a>
                     </li>
 
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
-                        <i class="bi bi-car-front-fill"></i> New cars</a>
-                    </li>
-
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
+                    <li><a th:href="@{/dealership/page?pageId=1}" class="nav-link px-2 text-white">
                         <i class="bi bi-bag-check"></i> Dealerships</a>
                     </li>
                 </ul>
@@ -53,11 +49,11 @@
                     </li>
 
                     <li sec:authorize="hasAuthority('SELLER')" class="text-end">
-                        <a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
+                        <a th:href="@{/announcement/my/page?pageId=1}" class="nav-link px-2 text-white">
                             <i class="bi bi-badge-ad-fill"></i> My ads</a>
                     </li>
 
-                    <li><a th:href="@{/vehicle/home}" class="nav-link px-2 text-white">
+                    <li><a th:href="@{/announcement/my-favorites/page?pageId=1}" class="nav-link px-2 text-white">
                         <i class="bi bi-heart"></i> Favorites</a>
                     </li>
 
@@ -68,14 +64,13 @@
                                 th:text="${#authentication.getPrincipal().getFirstname() + ' ' + #authentication.getPrincipal().getLastname()}"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" th:href="@{/vehicle/home}">Profile</a></li>
+                            <li><a class="dropdown-item" th:href="@{/user/profile}">Profile</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" th:href="@{/authentication/logout}">Logout</a></li>
                         </ul>
                     </li>
-                </ul>
                 </ul>
             </div>
         </div>
