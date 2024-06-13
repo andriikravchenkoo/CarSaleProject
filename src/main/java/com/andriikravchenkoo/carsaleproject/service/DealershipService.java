@@ -8,7 +8,7 @@ public interface DealershipService {
 
     List<Dealership> findAll();
 
-    List<Dealership> findAllByDateForPage(Long limitPerPage, Long offset);
+    List<Dealership> findAllByDate(Long limitPerPage, Long offset);
 
     Dealership findById(Long id);
 

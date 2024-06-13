@@ -34,7 +34,7 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
     @Override
     public List<DealershipPageDto> getAllDealershipsByDate(Long limitPerPage, Long offset) {
-        return dealershipService.findAllByDateForPage(limitPerPage, offset).stream()
+        return dealershipService.findAllByDate(limitPerPage, offset).stream()
                 .map(this::mapToDealershipPageDto)
                 .toList();
     }

@@ -96,7 +96,7 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
 
     @Override
     public List<AnnouncementPageDto> getAllAnnouncementsByDate(Long limitPerPage, Long offset) {
-        return announcementService.findAllByDateForPage(limitPerPage, offset).stream()
+        return announcementService.findAllByDate(limitPerPage, offset).stream()
                 .map(this::mapToAnnouncementPageDto)
                 .toList();
     }

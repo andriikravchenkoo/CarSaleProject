@@ -25,7 +25,7 @@ public class DealershipServiceImpl implements DealershipService {
     }
 
     @Override
-    public List<Dealership> findAllByDateForPage(Long limitPerPage, Long offset) {
+    public List<Dealership> findAllByDate(Long limitPerPage, Long offset) {
         return dealershipDao.findAllByDate(limitPerPage, offset);
     }
 
