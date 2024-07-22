@@ -35,4 +35,3 @@ services:
     environment:
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://car_sale_db:5432/car_sale_db'
       JAVA_OPTS: '-Xmx512m'
-    command: ["/opt/app/init_photos.sh"]
