@@ -1,0 +1,38 @@
+version: '3'
+
+volumes:
+  pg_car_sale:
+
+services:
+  car_sale_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: car_sale_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pg_car_sale:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+
+  flyway:
+    image: boxfuse/flyway:latest-alpine
+    command: -url=jdbc:postgresql://car_sale_db:5432/car_sale_db -schemas=public -user=postgres -password=postgres
+    volumes:
+      - ./flyway:/flyway/sql
+    restart: on-failure
+    depends_on:
+      - car_sale_db
+
+  app:
+    restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - car_sale_db
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://car_sale_db:5432/car_sale_db'
+      JAVA_OPTS: '-Xmx512m'
+    command: ["/opt/app/init_photos.sh"]

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/car_sale
+    url: jdbc:postgresql://localhost:5433/car_sale_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -8,6 +8,14 @@ spring:
   servlet:
     multipart:
       max-file-size: 100MB
+
+  flyway:
+    validate-migration-naming: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    locations: classpath:/db/migration
+    baseline-on-migrate: true
 
 server:
   servlet:

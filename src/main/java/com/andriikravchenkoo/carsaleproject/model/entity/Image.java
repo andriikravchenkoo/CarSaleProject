@@ -1,7 +1,5 @@
 package com.andriikravchenkoo.carsaleproject.model.entity;
 
-import com.andriikravchenkoo.carsaleproject.util.ImageCompressor;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,7 +33,7 @@ public class Image {
         return Image.builder()
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
-                .data(ImageCompressor.compress(file.getBytes()))
+                .data(file.getBytes())
                 .build();
     }
 }

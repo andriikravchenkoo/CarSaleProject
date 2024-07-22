@@ -1,10 +1,15 @@
 package com.andriikravchenkoo.carsaleproject.security.facade.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.andriikravchenkoo.carsaleproject.dto.RegisterRequestDto;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.service.ImageService;
 import com.andriikravchenkoo.carsaleproject.service.UserService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,24 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class RegistrationServiceFacadeImplTest {
 
-    @InjectMocks
-    private RegistrationServiceFacadeImpl registrationServiceFacadeImpl;
+    @InjectMocks private RegistrationServiceFacadeImpl registrationServiceFacadeImpl;
 
-    @Mock
-    private UserService userService;
+    @Mock private UserService userService;
 
-    @Mock
-    private ImageService imageService;
+    @Mock private ImageService imageService;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    @Mock private PasswordEncoder passwordEncoder;
 
     private RegisterRequestDto testRegisterRequestDto;
     private MultipartFile testFile;
@@ -75,9 +72,15 @@ class RegistrationServiceFacadeImplTest {
         String expectedErrorMessage = "Image by user id = " + testImage.getId() + " not found";
 
         when(userService.save(any(User.class))).thenReturn(testUser);
-        when(imageService.save(any(MultipartFile.class))).thenThrow(new IOException(expectedErrorMessage));
+        when(imageService.save(any(MultipartFile.class)))
+                .thenThrow(new IOException(expectedErrorMessage));
 
-        IOException exception = assertThrows(IOException.class, () -> registrationServiceFacadeImpl.register(testRegisterRequestDto, testFile));
+        IOException exception =
+                assertThrows(
+                        IOException.class,
+                        () ->
+                                registrationServiceFacadeImpl.register(
+                                        testRegisterRequestDto, testFile));
 
         assertEquals(expectedErrorMessage, exception.getMessage());
 

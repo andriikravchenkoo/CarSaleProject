@@ -28,14 +28,13 @@ Project is currently under development.
 
 ## Users profiles
 
-Seller: **email** - seller@gmail.com, **password** - seller
+Seller: **email** - `seller@gmail.com`, **password** - `seller`
 
-Customers - **email** - customer@gmail.com, **password** - customer
+Customers: **email** - `customer@gmail.com`, **password** - `customer`
 
 ## Contributing
 
 1. Clone the project locally on your machine
-2. Run schema.sql script
-3. Run applications so that images are saved in the database
-4. Run data.sql script
-5. Run application
+2. Run `docker compose build` in terminal to build Docker images
+3. Run `docker compose up` in terminal to run Docker container
+4. Go to this address in your browser: http://localhost:8080/car-sale/authentication/login

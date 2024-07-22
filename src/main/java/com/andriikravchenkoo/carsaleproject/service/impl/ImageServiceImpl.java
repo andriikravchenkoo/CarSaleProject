@@ -9,7 +9,6 @@ import com.andriikravchenkoo.carsaleproject.model.entity.Dealership;
 import com.andriikravchenkoo.carsaleproject.model.entity.Image;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.service.ImageService;
-import com.andriikravchenkoo.carsaleproject.util.ImageCompressor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +36,7 @@ public class ImageServiceImpl implements ImageService {
                 .id(image.getId())
                 .name(image.getName())
                 .type(image.getType())
-                .data(ImageCompressor.decompress(image.getData()))
+                .data(image.getData())
                 .build();
     }
 
@@ -53,28 +52,18 @@ public class ImageServiceImpl implements ImageService {
                 .id(image.getId())
                 .name(image.getName())
                 .type(image.getType())
-                .data(ImageCompressor.decompress(image.getData()))
+                .data(image.getData())
                 .build();
     }
 
     @Override
     public List<Image> findAllByDealershipId(Long id) {
-        return imageDao.findAllByDealershipId(id).stream()
-                .peek(
-                        image -> {
-                            ImageCompressor.decompress(image.getData());
-                        })
-                .toList();
+        return imageDao.findAllByDealershipId(id);
     }
 
     @Override
     public List<Image> findAllByAnnouncementId(Long id) {
-        return imageDao.findAllByAnnouncementId(id).stream()
-                .peek(
-                        image -> {
-                            ImageCompressor.decompress(image.getData());
-                        })
-                .toList();
+        return imageDao.findAllByAnnouncementId(id);
     }
 
     @Override
