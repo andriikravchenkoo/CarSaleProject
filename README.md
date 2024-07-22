@@ -22,6 +22,7 @@ Project is currently under development.
 * Spring MVC
 * Thymeleaf
 * PostgreSQL
+* Flyway
 * Lombok
 * Logback
 * JUnit 5
