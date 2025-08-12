@@ -34,4 +34,27 @@ public interface AnnouncementDao {
     Long findTotalCountByVehicleUsage(Boolean isUsed);
 
     Long findTotalCountByDealershipId(Long dealershipId);
+
+    List<Announcement> findAllByAdvancedFilter(
+            Long limitPerPage,
+            Long offset,
+            String query,
+            String brand,
+            String model,
+            Integer minYear,
+            Integer maxYear,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isUsed,
+            String sort);
+
+    Long findTotalCountByAdvancedFilter(
+            String query,
+            String brand,
+            String model,
+            Integer minYear,
+            Integer maxYear,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isUsed);
 }

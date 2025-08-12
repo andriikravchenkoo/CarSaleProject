@@ -3,6 +3,7 @@ package com.andriikravchenkoo.carsaleproject.facade.impl;
 import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
+import com.andriikravchenkoo.carsaleproject.facade.filter.AnnouncementFilter;
 import com.andriikravchenkoo.carsaleproject.model.entity.*;
 import com.andriikravchenkoo.carsaleproject.service.*;
 
@@ -133,6 +134,79 @@ public class AnnouncementServiceFacadeImpl implements AnnouncementServiceFacade 
                 .stream()
                 .map(this::mapToAnnouncementPageDto)
                 .toList();
+    }
+
+    @Override
+    public List<AnnouncementPageDto> searchAnnouncements(
+            Long limitPerPage, Long offset, AnnouncementFilter filter) {
+        if (filter == null || !filter.hasAnyCriteria()) {
+            return getAllAnnouncementsByDate(limitPerPage, offset);
+        }
+
+        // Prefer exact filters (favorites/user/dealership) first
+        if (filter.getFavoritesForUserId() != null) {
+            return getAllFavoritesAnnouncementsByUser(
+                    limitPerPage, offset, filter.getFavoritesForUserId());
+        }
+        if (filter.getUserId() != null) {
+            return getAllAnnouncementByUser(limitPerPage, offset, filter.getUserId());
+        }
+        if (filter.getDealershipId() != null) {
+            return getAllAnnouncementsByDealership(limitPerPage, offset, filter.getDealershipId());
+        }
+
+        // Advanced filter goes to DAO via service
+        return announcementService
+                .findAllByAdvancedFilter(
+                        limitPerPage,
+                        offset,
+                        filter.getQuery(),
+                        filter.getBrand(),
+                        filter.getModel(),
+                        filter.getMinYear(),
+                        filter.getMaxYear(),
+                        filter.getMinPrice(),
+                        filter.getMaxPrice(),
+                        filter.getIsUsed(),
+                        filter.getSort() != null ? filter.getSort().name() : "DATE_DESC")
+                .stream()
+                .map(this::mapToAnnouncementPageDto)
+                .toList();
+    }
+
+    @Override
+    public Long getTotalCountByAdvancedFilter(AnnouncementFilter filter) {
+        if (filter == null || !filter.hasAnyCriteria()) {
+            return announcementService.findTotalCount();
+        }
+        if (filter.getFavoritesForUserId() != null) {
+            return favoritesService.findTotalCountByUserId(filter.getFavoritesForUserId());
+        }
+        if (filter.getUserId() != null) {
+            return announcementService.findTotalCountBuUserId(filter.getUserId());
+        }
+        if (filter.getDealershipId() != null) {
+            return announcementService.findTotalCountByDealershipId(filter.getDealershipId());
+        }
+        if (filter.getIsUsed() != null
+                || filter.getQuery() != null
+                || filter.getBrand() != null
+                || filter.getModel() != null
+                || filter.getMinYear() != null
+                || filter.getMaxYear() != null
+                || filter.getMinPrice() != null
+                || filter.getMaxPrice() != null) {
+            return announcementService.findTotalCountByAdvancedFilter(
+                    filter.getQuery(),
+                    filter.getBrand(),
+                    filter.getModel(),
+                    filter.getMinYear(),
+                    filter.getMaxYear(),
+                    filter.getMinPrice(),
+                    filter.getMaxPrice(),
+                    filter.getIsUsed());
+        }
+        return announcementService.findTotalCount();
     }
 
     private AnnouncementPageDto mapToAnnouncementPageDto(Announcement announcement) {

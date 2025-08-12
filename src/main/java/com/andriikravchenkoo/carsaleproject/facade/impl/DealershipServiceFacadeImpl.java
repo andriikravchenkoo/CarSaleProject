@@ -105,4 +105,17 @@ public class DealershipServiceFacadeImpl implements DealershipServiceFacade {
 
         userService.saveDealership(user);
     }
+
+    @Override
+    public List<DealershipPageDto> searchDealerships(
+            Long limitPerPage, Long offset, String query, String region) {
+        return dealershipService.findAllByFilter(limitPerPage, offset, query, region).stream()
+                .map(this::mapToDealershipPageDto)
+                .toList();
+    }
+
+    @Override
+    public Long getTotalCountDealershipsByFilter(String query, String region) {
+        return dealershipService.findTotalCountByFilter(query, region);
+    }
 }

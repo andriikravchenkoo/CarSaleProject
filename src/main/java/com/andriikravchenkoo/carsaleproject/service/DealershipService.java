@@ -18,6 +18,10 @@ public interface DealershipService {
 
     Long findTotalCount();
 
+    List<Dealership> findAllByFilter(Long limitPerPage, Long offset, String query, String region);
+
+    Long findTotalCountByFilter(String query, String region);
+
     Dealership save(Dealership dealership);
 
     void delete(Dealership dealership);

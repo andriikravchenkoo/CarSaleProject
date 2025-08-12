@@ -94,4 +94,45 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public Long findTotalCountByDealershipId(Long dealershipId) {
         return announcementDao.findTotalCountByDealershipId(dealershipId);
     }
+
+    @Override
+    public List<Announcement> findAllByAdvancedFilter(
+            Long limitPerPage,
+            Long offset,
+            String query,
+            String brand,
+            String model,
+            Integer minYear,
+            Integer maxYear,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isUsed,
+            String sort) {
+        return announcementDao.findAllByAdvancedFilter(
+                limitPerPage,
+                offset,
+                query,
+                brand,
+                model,
+                minYear,
+                maxYear,
+                minPrice,
+                maxPrice,
+                isUsed,
+                sort);
+    }
+
+    @Override
+    public Long findTotalCountByAdvancedFilter(
+            String query,
+            String brand,
+            String model,
+            Integer minYear,
+            Integer maxYear,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isUsed) {
+        return announcementDao.findTotalCountByAdvancedFilter(
+                query, brand, model, minYear, maxYear, minPrice, maxPrice, isUsed);
+    }
 }

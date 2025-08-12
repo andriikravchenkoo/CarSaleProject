@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,5 +182,126 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
         SqlParameterSource sqlParameterSource =
                 new MapSqlParameterSource().addValue("dealership_id", dealershipId);
         return namedParameterJdbcTemplate.queryForObject(SQL, sqlParameterSource, Long.class);
+    }
+
+    @Override
+    public List<Announcement> findAllByAdvancedFilter(
+            Long limitPerPage,
+            Long offset,
+            String query,
+            String brand,
+            String model,
+            Integer minYear,
+            Integer maxYear,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isUsed,
+            String sort) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT a.* FROM announcements a JOIN vehicles v ON a.vehicle_id = v.id WHERE 1=1 ");
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        if (StringUtils.hasText(query)) {
+            sql.append(" AND (LOWER(v.brand) LIKE :q OR LOWER(v.model) LIKE :q) ");
+            params.addValue("q", "%" + query.toLowerCase() + "%");
+        }
+        if (StringUtils.hasText(brand)) {
+            sql.append(" AND LOWER(v.brand) = :brand ");
+            params.addValue("brand", brand.toLowerCase());
+        }
+        if (StringUtils.hasText(model)) {
+            sql.append(" AND LOWER(v.model) = :model ");
+            params.addValue("model", model.toLowerCase());
+        }
+        if (minYear != null) {
+            sql.append(" AND v.year >= :minYear ");
+            params.addValue("minYear", minYear);
+        }
+        if (maxYear != null) {
+            sql.append(" AND v.year <= :maxYear ");
+            params.addValue("maxYear", maxYear);
+        }
+        if (minPrice != null) {
+            sql.append(" AND a.price >= :minPrice ");
+            params.addValue("minPrice", minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND a.price <= :maxPrice ");
+            params.addValue("maxPrice", maxPrice);
+        }
+        if (isUsed != null) {
+            sql.append(" AND v.is_used = :isUsed ");
+            params.addValue("isUsed", isUsed);
+        }
+
+        String orderBy = " ORDER BY a.created DESC ";
+        if (StringUtils.hasText(sort)) {
+            switch (sort) {
+                case "DATE_ASC" -> orderBy = " ORDER BY a.created ASC ";
+                case "DATE_DESC" -> orderBy = " ORDER BY a.created DESC ";
+                case "PRICE_ASC" -> orderBy = " ORDER BY a.price ASC ";
+                case "PRICE_DESC" -> orderBy = " ORDER BY a.price DESC ";
+                default -> orderBy = " ORDER BY a.created DESC ";
+            }
+        }
+        sql.append(orderBy);
+        sql.append(" LIMIT :limitPerPage OFFSET :offset ");
+
+        params.addValue("limitPerPage", limitPerPage);
+        params.addValue("offset", offset);
+
+        return namedParameterJdbcTemplate.query(sql.toString(), params, new AnnouncementRowMapper());
+    }
+
+    @Override
+    public Long findTotalCountByAdvancedFilter(
+            String query,
+            String brand,
+            String model,
+            Integer minYear,
+            Integer maxYear,
+            Integer minPrice,
+            Integer maxPrice,
+            Boolean isUsed) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) FROM announcements a JOIN vehicles v ON a.vehicle_id = v.id WHERE 1=1 ");
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        if (StringUtils.hasText(query)) {
+            sql.append(" AND (LOWER(v.brand) LIKE :q OR LOWER(v.model) LIKE :q) ");
+            params.addValue("q", "%" + query.toLowerCase() + "%");
+        }
+        if (StringUtils.hasText(brand)) {
+            sql.append(" AND LOWER(v.brand) = :brand ");
+            params.addValue("brand", brand.toLowerCase());
+        }
+        if (StringUtils.hasText(model)) {
+            sql.append(" AND LOWER(v.model) = :model ");
+            params.addValue("model", model.toLowerCase());
+        }
+        if (minYear != null) {
+            sql.append(" AND v.year >= :minYear ");
+            params.addValue("minYear", minYear);
+        }
+        if (maxYear != null) {
+            sql.append(" AND v.year <= :maxYear ");
+            params.addValue("maxYear", maxYear);
+        }
+        if (minPrice != null) {
+            sql.append(" AND a.price >= :minPrice ");
+            params.addValue("minPrice", minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND a.price <= :maxPrice ");
+            params.addValue("maxPrice", maxPrice);
+        }
+        if (isUsed != null) {
+            sql.append(" AND v.is_used = :isUsed ");
+            params.addValue("isUsed", isUsed);
+        }
+
+        return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, Long.class);
     }
 }

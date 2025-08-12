@@ -2,6 +2,7 @@ package com.andriikravchenkoo.carsaleproject.facade;
 
 import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
+import com.andriikravchenkoo.carsaleproject.facade.filter.AnnouncementFilter;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,16 @@ public interface AnnouncementServiceFacade {
 
     List<AnnouncementPageDto> getAllAnnouncementsByDealership(
             Long limitPerPage, Long offset, Long dealershipId);
+
+    /**
+     * Unified search endpoint that wraps existing specific queries.
+     * If multiple filter fields are provided, the precedence is:
+     * favoritesForUserId -> userId -> dealershipId -> isUsed -> default by date.
+     */
+    List<AnnouncementPageDto> searchAnnouncements(
+            Long limitPerPage, Long offset, AnnouncementFilter filter);
+
+    Long getTotalCountByAdvancedFilter(AnnouncementFilter filter);
 
     void deleteAnnouncement(Long announcementId);
 

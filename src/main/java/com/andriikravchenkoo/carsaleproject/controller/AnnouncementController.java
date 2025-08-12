@@ -3,6 +3,7 @@ package com.andriikravchenkoo.carsaleproject.controller;
 import com.andriikravchenkoo.carsaleproject.dto.AnnouncementPageDto;
 import com.andriikravchenkoo.carsaleproject.dto.VehicleAnnouncementCreateDto;
 import com.andriikravchenkoo.carsaleproject.facade.AnnouncementServiceFacade;
+import com.andriikravchenkoo.carsaleproject.facade.filter.AnnouncementFilter;
 import com.andriikravchenkoo.carsaleproject.model.entity.User;
 import com.andriikravchenkoo.carsaleproject.model.enums.*;
 
@@ -169,6 +170,42 @@ public class AnnouncementController {
         return "announcement/new-vehicle-announcements";
     }
 
+    @GetMapping("/new-vehicles/search")
+    public String searchNewVehicleAnnouncements(
+            @RequestParam Long pageId,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String brand,
+            @RequestParam(name = "model", required = false) String vehicleModel,
+            @RequestParam(required = false) Integer minYear,
+            @RequestParam(required = false) Integer maxYear,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(required = false, defaultValue = "DATE_DESC") AnnouncementFilter.Sort sort,
+            Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        AnnouncementFilter filter = AnnouncementFilter.builder()
+                .query(query)
+                .brand(brand)
+                .model(vehicleModel)
+                .minYear(minYear)
+                .maxYear(maxYear)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .isUsed(false)
+                .sort(sort)
+                .build();
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.searchAnnouncements(limitPerPage, offset, filter);
+        long totalCountAnnouncements = announcementServiceFacade.getTotalCountByAdvancedFilter(filter);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("filter", filter);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
+        return "announcement/new-vehicle-announcements";
+    }
+
     @GetMapping("/used-vehicles/page")
     public String getAllAnnouncementsByUsedVehicleForPage(@RequestParam Long pageId, Model model) {
         long offset = (pageId - 1) * limitPerPage;
@@ -183,6 +220,42 @@ public class AnnouncementController {
         model.addAttribute("announcements", announcements);
         setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
+        return "announcement/used-vehicle-announcements";
+    }
+
+    @GetMapping("/used-vehicles/search")
+    public String searchUsedVehicleAnnouncements(
+            @RequestParam Long pageId,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String brand,
+            @RequestParam(name = "model", required = false) String vehicleModel,
+            @RequestParam(required = false) Integer minYear,
+            @RequestParam(required = false) Integer maxYear,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(required = false, defaultValue = "DATE_DESC") AnnouncementFilter.Sort sort,
+            Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        AnnouncementFilter filter = AnnouncementFilter.builder()
+                .query(query)
+                .brand(brand)
+                .model(vehicleModel)
+                .minYear(minYear)
+                .maxYear(maxYear)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .isUsed(true)
+                .sort(sort)
+                .build();
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.searchAnnouncements(limitPerPage, offset, filter);
+        long totalCountAnnouncements = announcementServiceFacade.getTotalCountByAdvancedFilter(filter);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("filter", filter);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
         return "announcement/used-vehicle-announcements";
     }
 
@@ -202,6 +275,50 @@ public class AnnouncementController {
         setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
 
         return "announcement/announcements-by-dealership";
+    }
+
+    @GetMapping("/search")
+    public String searchAnnouncements(
+            @RequestParam Long pageId,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long dealershipId,
+            @RequestParam(required = false) Boolean isUsed,
+            @RequestParam(required = false) Long favoritesForUserId,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String brand,
+            @RequestParam(name = "model", required = false) String vehicleModel,
+            @RequestParam(required = false) Integer minYear,
+            @RequestParam(required = false) Integer maxYear,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(required = false, defaultValue = "DATE_DESC") AnnouncementFilter.Sort sort,
+            Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        AnnouncementFilter filter = AnnouncementFilter.builder()
+                .userId(userId)
+                .dealershipId(dealershipId)
+                .isUsed(isUsed)
+                .favoritesForUserId(favoritesForUserId)
+                .query(query)
+                .brand(brand)
+                .model(vehicleModel)
+                .minYear(minYear)
+                .maxYear(maxYear)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .sort(sort)
+                .build();
+
+        List<AnnouncementPageDto> announcements =
+                announcementServiceFacade.searchAnnouncements(limitPerPage, offset, filter);
+
+        long totalCountAnnouncements = announcementServiceFacade.getTotalCountByAdvancedFilter(filter);
+
+        model.addAttribute("announcements", announcements);
+        model.addAttribute("filter", filter);
+        setupPaginationModel(model, limitPerPage, totalCountAnnouncements, pageId);
+        return "announcement/announcements";
     }
 
     private void setupPaginationModel(

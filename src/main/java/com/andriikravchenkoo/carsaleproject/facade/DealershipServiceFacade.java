@@ -20,4 +20,8 @@ public interface DealershipServiceFacade {
     DealershipPageDto getDealershipWithImages(Long id, User authenticationUser);
 
     void becomeSeller(Long dealershipId, User user);
+
+    List<DealershipPageDto> searchDealerships(Long limitPerPage, Long offset, String query, String region);
+
+    Long getTotalCountDealershipsByFilter(String query, String region);
 }

@@ -14,8 +14,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Types;
 import java.util.HashMap;
+import org.springframework.util.StringUtils;
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,6 +94,39 @@ public class DealershipDaoImpl implements DealershipDao {
     public Long findTotalCount() {
         final String SQL = "SELECT COUNT(*) FROM dealerships";
         return namedParameterJdbcTemplate.queryForObject(SQL, new HashMap<>(), Long.class);
+    }
+
+    @Override
+    public List<Dealership> findAllByFilter(Long limitPerPage, Long offset, String query, String region) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM dealerships WHERE 1=1 ");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        if (StringUtils.hasText(query)) {
+            sql.append(" AND (LOWER(name) LIKE :q OR LOWER(region) LIKE :q) ");
+            params.addValue("q", "%" + query.toLowerCase() + "%");
+        }
+        if (StringUtils.hasText(region)) {
+            sql.append(" AND region = :region ");
+            params.addValue("region", region, Types.OTHER);
+        }
+        sql.append(" ORDER BY id DESC LIMIT :limitPerPage OFFSET :offset ");
+        params.addValue("limitPerPage", limitPerPage);
+        params.addValue("offset", offset);
+        return namedParameterJdbcTemplate.query(sql.toString(), params, new DealershipRowMapper());
+    }
+
+    @Override
+    public Long findTotalCountByFilter(String query, String region) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM dealerships WHERE 1=1 ");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        if (StringUtils.hasText(query)) {
+            sql.append(" AND (LOWER(name) LIKE :q OR LOWER(region) LIKE :q) ");
+            params.addValue("q", "%" + query.toLowerCase() + "%");
+        }
+        if (StringUtils.hasText(region)) {
+            sql.append(" AND region = :region ");
+            params.addValue("region", region, Types.OTHER);
+        }
+        return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, Long.class);
     }
 
     @Override

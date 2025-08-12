@@ -82,6 +82,28 @@ public class DealershipController {
         return "dealership/dealerships";
     }
 
+    @GetMapping("/search")
+    public String searchDealerships(
+            @RequestParam Long pageId,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String region,
+            Model model) {
+        long offset = (pageId - 1) * limitPerPage;
+
+        List<DealershipPageDto> dealerships =
+                dealershipServiceFacade.searchDealerships(limitPerPage, offset, query, region);
+
+        long totalCountDealerships = dealershipServiceFacade.getTotalCountDealershipsByFilter(query, region);
+        long totalPages = (long) Math.ceil((double) totalCountDealerships / limitPerPage);
+
+        model.addAttribute("dealerships", dealerships);
+        model.addAttribute("pageId", pageId);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("query", query);
+        model.addAttribute("region", region);
+        return "dealership/dealerships";
+    }
+
     @PostMapping("/add-seller")
     public String postBecomingSellerInDealership(
             @RequestParam("dealershipId") Long dealershipId,

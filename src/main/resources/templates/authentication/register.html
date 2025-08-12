@@ -5,6 +5,7 @@
     <title>Register</title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
 
         body {
@@ -15,79 +16,80 @@
 </head>
 <body>
 
-<div class="text-center">
-    <h1>Sign up</h1>
-</div>
+<div class="container py-5 d-flex justify-content-center">
+    <div class="w-100" style="max-width: 560px;">
+        <div class="card">
+            <div class="card-header"><h2 class="h4 mb-0"><i class="bi bi-person-plus me-1"></i>Sign up</h2></div>
+            <div class="card-body">
+                <form method="post" th:object="${registerRequestDto}" enctype="multipart/form-data">
 
-<div class="vstack gap-2 col-md-4 mx-auto mt-5">
-    <form method="post" th:object="${registerRequestDto}" enctype="multipart/form-data">
+                    <div th:fragment="createFragment">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="firstname">Firstname</label>
+                                <input class="form-control" id="firstname" name="firstname" th:value="${registerRequestDto.firstname}" type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="lastname">Lastname</label>
+                                <input class="form-control" id="lastname" name="lastname" th:value="${registerRequestDto.lastname}" type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="email">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                                    <input class="form-control" id="email" name="email" placeholder="test@gmail.com" th:value="${registerRequestDto.email}" type="email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="password">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+                                    <input class="form-control" id="password" name="password" th:value="${registerRequestDto.password}" type="password">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="phoneNumber">Phone number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-telephone"></i></span>
+                                    <input class="form-control" id="phoneNumber" name="phoneNumber" placeholder="+380555555555" th:value="${registerRequestDto.phoneNumber}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="role">Role</label>
+                                <select class="form-select" id="role" name="role">
+                                    <option th:each="role: ${roles}"
+                                            th:selected="${registerRequestDto.role == role}"
+                                            th:text="${role}"
+                                            th:value="${role}"></option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="file">Photo</label>
+                                <input class="form-control" id="file" name="file" type="file" accept="image/png, image/jpeg">
+                            </div>
+                        </div>
+                    </div>
 
-        <div th:fragment="createFragment">
-            <div class="mb-3">
-                <label class="form-label" for="firstname">Firstname</label>
-                <input class="form-control" id="firstname" name="firstname" th:value="${registerRequestDto.firstname}"
-                       type="firstname">
+                    <div class="text-center mt-4">
+                        <button class="btn btn-success" type="submit"><i class="bi bi-person-check me-1"></i>Sign up</button>
+                    </div>
+
+                    <div th:if="${#fields.hasErrors()}">
+                        <div class="alert alert-danger mt-4">
+                            <ul>
+                                <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div th:if="${errorMessage}" class="alert alert-danger mt-4" role="alert">
+                        <li th:text="${errorMessage}"></li>
+                    </div>
+
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="lastname">Lastname</label>
-                <input class="form-control" id="lastname" name="lastname" th:value="${registerRequestDto.lastname}"
-                       type="lastname">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-control" id="email" name="email" placeholder="test@gmail.com" th:value="${registerRequestDto.email}"
-                       type="email">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="password">Password</label>
-                <input class="form-control" id="password" name="password" th:value="${registerRequestDto.password}"
-                       type="password">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="phoneNumber">Phone number</label>
-                <input class="form-control" id="phoneNumber" name="phoneNumber" placeholder="+380555555555"th:value="${registerRequestDto.phoneNumber}"
-                       type="phoneNumber">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="role">Role</label>
-                <select class="form-select" id="role" name="role">
-                    <option th:each="role: ${roles}"
-                            th:selected="${registerRequestDto.role == role}"
-                            th:text="${role}"
-                            th:value="${role}">
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="file">Photo</label>
-                <input class="form-control" id="file" name="file" type="file" accept="image/png, image/jpeg">
-            </div>
-
         </div>
-
-        <div class="text-center">
-            <button class="btn btn-success" type="submit">Sign up</button>
-        </div>
-
-        <div th:if="${#fields.hasErrors()}">
-            <div class="alert alert-danger mt-4">
-                <ul>
-                    <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
-                </ul>
-            </div>
-        </div>
-
-        <div th:if="${errorMessage}" class="alert alert-danger mt-4" role="alert">
-            <li th:text="${errorMessage}"></li>
-        </div>
-
-    </form>
-
+    </div>
 </div>
 
 <script crossorigin="anonymous"

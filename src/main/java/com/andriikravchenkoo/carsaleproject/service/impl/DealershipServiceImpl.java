@@ -69,6 +69,16 @@ public class DealershipServiceImpl implements DealershipService {
     }
 
     @Override
+    public List<Dealership> findAllByFilter(Long limitPerPage, Long offset, String query, String region) {
+        return dealershipDao.findAllByFilter(limitPerPage, offset, query, region);
+    }
+
+    @Override
+    public Long findTotalCountByFilter(String query, String region) {
+        return dealershipDao.findTotalCountByFilter(query, region);
+    }
+
+    @Override
     public Dealership save(Dealership dealership) {
         try {
             return dealershipDao.save(dealership);

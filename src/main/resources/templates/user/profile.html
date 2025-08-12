@@ -5,17 +5,14 @@
     <title>User Profile</title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
 
         body {
             background-color: #f8f9fa;
         }
 
-        .profile-image img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-        }
+        .profile-image img { width: 150px; height: 150px; object-fit: cover; }
 
         .profile-details {
             margin-top: 20px;
@@ -27,22 +24,22 @@
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 
 <div class="container my-5">
-    <div class="row justify-content-center align-items-center">
+    <div class="row justify-content-center align-items-start g-4">
         <div class="col-md-4 text-center">
             <div class="profile-image d-inline-block border border-3 border-white rounded-circle shadow-sm mb-3">
                 <img th:src="@{'/image/' + ${image.id}}" alt="User Profile Image" class="rounded-circle">
             </div>
-            <h2>User Profile</h2>
+            <h2 class="h4">User Profile</h2>
         </div>
         <div class="col-md-8">
-            <div class="card profile-details">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Firstname:</strong> <span th:text="${user.firstname}"></span></li>
-                    <li class="list-group-item"><strong>Lastname:</strong> <span th:text="${user.lastname}"></span></li>
-                    <li class="list-group-item"><strong>Email:</strong> <span th:text="${user.email}"></span></li>
-                    <li class="list-group-item"><strong>Phone number:</strong> <span th:text="${user.phoneNumber}"></span></li>
-                    <li class="list-group-item"><strong>Role:</strong> <span th:text="${user.role}"></span></li>
-                </ul>
+            <div class="card profile-details p-3">
+                <div class="row g-3">
+                    <div class="col-md-6"><strong>Firstname:</strong> <span th:text="${user.firstname}"></span></div>
+                    <div class="col-md-6"><strong>Lastname:</strong> <span th:text="${user.lastname}"></span></div>
+                    <div class="col-md-6"><strong>Email:</strong> <span th:text="${user.email}"></span></div>
+                    <div class="col-md-6"><strong>Phone number:</strong> <span th:text="${user.phoneNumber}"></span></div>
+                    <div class="col-md-6"><strong>Role:</strong> <span th:text="${user.role}"></span></div>
+                </div>
             </div>
         </div>
     </div>
